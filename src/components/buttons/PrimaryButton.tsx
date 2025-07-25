@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, TouchableOpacityProps } from 'react-native';
+import { BodyM } from '../typography/BodyText';
 
 interface PrimaryButtonProps extends TouchableOpacityProps {
   title: string;
@@ -11,18 +12,18 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   variant = 'primary',
   ...props 
 }) => {
-  const baseClasses = "w-full py-4 px-6 items-center justify-center mb-4";
+  const baseClasses = "w-full py-5 px-6 items-center justify-center mb-4";
   
   const variantClasses = variant === 'dark' 
-    ? "bg-black rounded-xl" 
+    ? "bg-primary-950 rounded-xl" 
     : variant === 'outline'
-    ? "bg-white border-2 border-gray-300 rounded-2xl"
-    : "bg-white border border-gray-300 rounded-xl";
+    ? "bg-white border-2 border-primary-300 rounded-2xl"
+    : "bg-white border border-primary-300 rounded-xl";
   
   const textClasses = variant === 'dark' 
     ? "text-white font-semibold text-base" 
     : variant === 'outline'
-    ? "text-gray-600 font-medium text-base"
+    ? "text-primary-950 font-medium text-base"
     : "text-black font-semibold text-base";
 
   return (
@@ -30,9 +31,9 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       className={`${baseClasses} ${variantClasses}`}
       {...props}
     >
-      <Text className={textClasses}>
+      <BodyM className={textClasses}>
         {title}
-      </Text>
+      </BodyM>
     </TouchableOpacity>
   );
 };

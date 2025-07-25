@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, TouchableOpacityProps } from 'react-native';
+import { BodyM } from '../typography/BodyText';
 
 interface SocialButtonProps extends TouchableOpacityProps {
   title: string;
@@ -15,7 +16,7 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity 
-      className="w-full py-4 px-6 rounded-xl items-center justify-center mb-3 flex-row bg-white border border-gray-300"
+      className="w-full py-5 px-6 rounded-xl items-center justify-center mb-3 flex-row bg-white border border-primary-300"
       {...props}
     >
       {icon && (
@@ -23,9 +24,9 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
           {icon}
         </View>
       )}
-      <Text className="text-gray-900 font-medium text-base">
+      <BodyM className="text-primary-950 font-medium text-base">
         {title}
-      </Text>
+      </BodyM>
     </TouchableOpacity>
   );
 };

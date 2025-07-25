@@ -29,7 +29,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
       <TouchableWithoutFeedback onPress={onPress}>
         <View className="relative">
           <TouchableOpacity
-            className={`w-full py-5 px-4 rounded-xl border border-gray-300 bg-white flex-row items-center justify-between ${className || ''}`}
+            className={`w-full py-5 px-4 rounded-xl border border-primary-300 bg-white flex-row items-center justify-between ${className || ''}`}
             onPress={onPress}
             activeOpacity={0.7}
           >

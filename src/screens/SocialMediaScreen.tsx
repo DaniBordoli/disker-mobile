@@ -10,6 +10,8 @@ import {
   Platform
 } from 'react-native';
 import { PrimaryButton } from '../components/buttons';
+import { HeadingM } from '../components/typography/Headings';
+import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 
 interface SocialMediaScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated') => void;
@@ -27,7 +29,7 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
     {
       id: 'tiktok',
       name: 'TikTok',
-      logo: require('../public/SignUpImages/tiktokLogo.png'),
+      logo: require('../public/Icons/TiktokRounded.png'),
       selected: false
     },
     {
@@ -39,7 +41,7 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
     {
       id: 'instagram',
       name: 'Instagram',
-      logo: require('../public/SignUpImages/instagramLogo.png'),
+      logo: require('../public/Icons/InstagramRounded.png'),
       selected: false
     }
   ]);
@@ -80,12 +82,12 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
        
         <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
           <TouchableOpacity 
-            className="w-10 h-10 items-center justify-center"
+            className="w-8 h-8 items-center justify-center"
             onPress={() => onNavigate('About')}
           >
             <Image
               source={require('../public/Icons/IconGoback.png')}
-              className="w-6 h-6"
+              className="w-5 h-5"
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -93,12 +95,14 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
           <View className="items-center justify-center">
             <Image
               source={require('../public/Logo.png')}
-              className="w-12 h-10"
+              className="w-12 h-11"
               resizeMode="contain"
             />
           </View>
           
-          <Text className="text-gray-600 font-medium">5/5</Text>
+          <View className="w-8 items-center justify-center">
+            <BodyMStrong className="text-gray-600 font-medium">5/5</BodyMStrong>
+          </View>
         </View>
 
       
@@ -108,12 +112,12 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingBottom: 120 }}
         >
-          <Text className="text-2xl text-center font-bold text-black mb-2">
+          <HeadingM className="text-2xl text-center font-bold text-primary-950 mb-2">
             ¿En qué redes creás contenido?
-          </Text>
-          <Text className="text-gray-600 text-center text-base mb-8 px-8">
+          </HeadingM>
+          <BodyM className="text-primary-600 text-center text-base mb-8 px-8">
             Para continuar, necesitás vincular y validar al menos una red social.
-          </Text>
+          </BodyM>
 
          
           <View className="flex-row justify-around mb-8">
@@ -125,12 +129,12 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
               >
                 <Image
                   source={platform.logo}
-                  className="w-8 h-8 mb-2"
+                  className="w-10 h-10 mb-2"
                   resizeMode="contain"
                 />
-                <Text className="text-sm font-medium text-black">
+                <BodyM className="text-sm font-medium text-black">
                   {platform.name}
-                </Text>
+                </BodyM>
               </TouchableOpacity>
             ))}
           </View>
@@ -147,14 +151,17 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
                   <View key={platform.id}>
                     <View className="flex-row items-center justify-between rounded-xl p-3">
                       <View className="flex-row items-center">
-                        <View className="w-10 h-10 rounded-full items-center justify-center mr-3" style={{
-                          backgroundColor: platform.id === 'youtube' ? '#ff8080ff' : 
-                                         platform.id === 'tiktok' ? '#000000' : 
-                                         platform.id === 'instagram' ? '#c285b5ff' : '#000000'
-                        }}>
+                        <View className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${
+                          platform.id === 'tiktok' ? 'bg-primary-950' : 'bg-transparent'
+                        }`}>
                           <Image
-                            source={platform.logo}
-                            className="w-6 h-6"
+                            source={platform.id === 'youtube' 
+                              ? require('../public/Icons/YoutubeRounded.png')
+                              : platform.id === 'instagram'
+                                ? require('../public/Icons/InstagramRoundedColorless.png')
+                                : platform.logo
+                            }
+                            className="w-10 h-10"
                             resizeMode="contain"
                           />
                         </View>

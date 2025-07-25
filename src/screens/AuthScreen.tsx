@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { PrimaryButton, SocialButton } from '../components/buttons';
+import { BodyLLink, BodyM } from '../components/typography/BodyText';
 
 interface AuthScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
@@ -45,10 +46,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
           className="w-64 h-24 mb-8"
           resizeMode="contain"
         />
-        <Text className="text-2xl font-bold text-center text-black mb-1">
+        <Text className="text-2xl font-bold text-center text-primary-950 mb-1">
           La plataforma para creadores
         </Text>
-        <Text className="text-2xl font-bold text-center text-black">
+        <Text className="text-2xl font-bold text-center text-primary-950">
           con marcas reales.
         </Text>
       </View>
@@ -96,19 +97,19 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
           className="items-center mt-4"
           onPress={() => console.log('Ya tengo cuenta')}
         >
-          <Text className="text-black font-medium text-lg underline">
+          <BodyLLink className="text-primary-950 font-medium text-lg underline">
             Ya tengo cuenta
-          </Text>
+          </BodyLLink>
         </TouchableOpacity>
 
         
         <View className="mt-8">
-          <Text className="text-base text-gray text-center leading-5">
+          <BodyM className="text-base text-primary-600 text-center leading-5">
             Al continuar, aceptas nuestro{' '}
             <Text className="underline">Acuerdo del usuario</Text> y{'\n'}
             confirmas que has entendido la{' '}
             <Text className="underline">Política de privacidad</Text>.
-          </Text>
+          </BodyM>
         </View>
       </View>
     </View>

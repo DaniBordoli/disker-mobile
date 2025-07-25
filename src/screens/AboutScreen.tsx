@@ -11,7 +11,9 @@ import {
 } from 'react-native';
 import { PrimaryButton, SelectionButton } from '../components/buttons';
 import { FloatingLabelInput, DateInput, SelectInput } from '../components/inputs';
-import { CountryPickerModal } from '../components/CountryPickerModal';
+import { CountryPickerModal } from '../components/modal/CountryPickerModal';
+import { HeadingM, HeadingXS } from '../components/typography/Headings';
+import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
 
 interface AboutScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia') => void;
@@ -67,12 +69,12 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
       
         <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
           <TouchableOpacity 
-            className="w-10 h-10 items-center justify-center"
+            className="w-8 h-8 items-center justify-center"
             onPress={() => onNavigate('Password')}
           >
             <Image
               source={require('../public/Icons/IconGoback.png')}
-              className="w-6 h-6"
+              className="w-5 h-5"
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -80,12 +82,14 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
           <View className="items-center justify-center">
             <Image
               source={require('../public/Logo.png')}
-              className="w-12 h-10"
+              className="w-12 h-11"
               resizeMode="contain"
             />
           </View>
           
-          <Text className="text-gray-600 font-medium">4/5</Text>
+          <View className="w-8 items-center justify-center">
+            <BodyMStrong className="text-gray-600 font-medium">4/5</BodyMStrong>
+          </View>
         </View>
 
     
@@ -95,23 +99,23 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingBottom: 100 }}
         >
-        <Text className="text-2xl text-center font-bold text-black mb-2">
+        <HeadingM  className="text-2xl text-center font-bold text-primary-950 mb-2">
           Contanos un poco más sobre vos
-        </Text>
-        <Text className="text-gray-600 text-center text-base mb-8">
+        </HeadingM>
+        <BodyM className="text-primary-600 text-center text-base mb-8">
           Esto nos ayuda a personalizar tu experiencia.
-        </Text>
+        </BodyM>
 
       
-        <Text className="text-black font-medium text-base mb-4">
+        <HeadingXS className="text-primary-950 font-medium text-base mb-4">
           ¿Cómo te identificás?
-        </Text>
-        
+        </HeadingXS>
+
   <View className="flex-row mb-6">
           <View className="w-auto">
             <SelectionButton
               title="Masculino"
-              icon="👦"
+              icon={require('../public/Icons/MasculineEmoji.png')}
               isSelected={gender === 'Masculino'}
               onPress={() => setGender('Masculino')}
             />
@@ -122,7 +126,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
           <View className="w-auto">
             <SelectionButton
               title="Femenino"
-              icon="👧"
+              icon={require('../public/Icons/FemenineEmoji.png')}
               isSelected={gender === 'Femenino'}
               onPress={() => setGender('Femenino')}
             />
@@ -130,18 +134,18 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
         </View>
 
         {/* Birth Date */}
-        <Text className="text-black font-medium text-base mb-4">
+        <HeadingXS className="text-primary-950 font-medium text-base mb-4">
           ¿Cuál es tu fecha de nacimiento?
-        </Text>
-        
+        </HeadingXS>
+
         <DateInput
           label="DD/MM/AAAA"
           value={birthDate}
           onChangeText={setBirthDate}
         />
         
-        <Text className={`text-sm mb-6 flex-row items-center ${
-          isUnderage ? 'text-red-600' : 'text-gray-500'
+        <BodyS className={`text-sm mb-6 flex-row items-center ${
+          isUnderage ? 'text-red-600' : 'text-primary-950'
         }`}>
           <Image
             source={isUnderage 
@@ -153,17 +157,16 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
             resizeMode="contain"
           />
           {' '}{isUnderage ? 'Tienes que ser mayor a 18 años' : 'Debés tener al menos 18 años para registrarte.'}
-        </Text>
+        </BodyS>
 
-        
-        <Text className="text-black font-medium text-base mb-4">
+        <HeadingXS className="text-primary-950 font-medium text-base mb-4">
           ¿Dónde vivís?
-        </Text>
-        
+        </HeadingXS>
+
         <SelectInput
           label="País"
           value={country}
-          placeholder="Seleccionar país"
+          placeholder="País"
           onPress={() => setShowCountryModal(true)}
           className="mb-4"
         />

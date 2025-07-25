@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
+import { HeadingM } from '../components/typography/Headings';
+import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 
 interface NameScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
@@ -26,12 +28,12 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
    
       <View className="flex-row items-center justify-between mb-8">
         <TouchableOpacity 
-          className="w-10 h-10 items-center justify-center"
+          className="w-8 h-8 items-center justify-center"
           onPress={() => onNavigate('Email')}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}
-            className="w-6 h-6"
+            className="w-5 h-5"
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -39,22 +41,24 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
         <View className="items-center justify-center">
           <Image
             source={require('../public/Logo.png')}
-            className="w-12 h-10"
+            className="w-12 h-11"
             resizeMode="contain"
           />
         </View>
         
-        <Text className="text-gray-600 font-medium">2/5</Text>
+        <View className="w-8 items-center justify-center">
+          <BodyMStrong className="text-gray-600 font-medium">2/5</BodyMStrong>
+        </View>
       </View>
 
     
       <View className="flex-1">
-        <Text className="text-2xl text-center font-bold text-black mb-2">
+        <HeadingM className="text-2xl text-center font-bold text-primary-950 mb-2">
           ¿Cómo te llamás?
-        </Text>
-        <Text className="text-gray-600 text-center text-base mb-8">
+        </HeadingM>
+        <BodyM className="text-primary-600 text-center text-base mb-8">
           Este será tu nombre visible para las marcas.
-        </Text>
+        </BodyM>
 
         <FloatingLabelInput
           label="Nombre"

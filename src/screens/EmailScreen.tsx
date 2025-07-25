@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { HeadingM } from '../components/typography/Headings';
 import { PrimaryButton } from '../components/buttons';
+import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 import { FloatingLabelInput } from '../components/inputs';
-import { VerifyEmailModal } from '../components/VerifyEmailModal';
+import { VerifyEmailModal } from '../components/modal/VerifyEmailModal';
 
 interface EmailScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
@@ -33,15 +35,15 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
     <View className="flex-1 bg-white px-6 pt-12 pb-8">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-     
+   
       <View className="flex-row items-center justify-between mb-8">
         <TouchableOpacity 
-          className="w-10 h-10 items-center justify-center"
+          className="w-8 h-8 items-center justify-center"
           onPress={() => onNavigate('Auth')}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}
-            className="w-6 h-6"
+            className="w-5 h-5"
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -49,22 +51,24 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
         <View className="items-center justify-center">
           <Image
             source={require('../public/Logo.png')}
-            className="w-12 h-10"
+            className="w-12 h-11"
             resizeMode="contain"
           />
         </View>
         
-        <Text className="text-gray-600 font-medium">1/5</Text>
+        <View className="w-8 items-center justify-center">
+          <BodyMStrong className="text-gray-600 font-medium">1/5</BodyMStrong>
+        </View>
       </View>
 
      
       <View className="flex-1">
-        <Text className="text-2xl text-center font-bold text-black mb-2">
+        <HeadingM className='text-center text-primary-950 mb-2'>
           ¡Empecemos por tu email!
-        </Text>
-        <Text className="text-gray-600 text-center text-base mb-8">
-          Así podremos crear tu cuenta en Disker.
-        </Text>
+        </HeadingM>
+        <BodyM className="text-primary-600 text-center mb-6">
+          Así podremos crear tu cuenta en Diskerr.
+        </BodyM>
 
         <FloatingLabelInput
           label="Email"

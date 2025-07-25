@@ -6,15 +6,17 @@ import {
   StatusBar
 } from 'react-native';
 import { PrimaryButton } from '../components/buttons';
+import { HeadingL } from '../components/typography/Headings';
+import { BodyM } from '../components/typography/BodyText';
 
 interface AccountCreatedScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated') => void;
+  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home') => void;
 }
 
 export const AccountCreatedScreen: React.FC<AccountCreatedScreenProps> = ({ onNavigate }) => {
   const handleContinue = () => {
-  
     console.log('Account creation completed');
+    onNavigate('Home');
   };
 
   return (
@@ -33,15 +35,14 @@ export const AccountCreatedScreen: React.FC<AccountCreatedScreenProps> = ({ onNa
         </View>
 
       
-        <Text className="text-3xl font-bold text-black text-center mb-4">
+        <HeadingL className="text-3xl font-bold text-primary-950 text-center mb-4">
           ¡Bienvenido a Diskerr!
-        </Text>
-        
-        <Text className="text-gray-600 text-center text-base mb-8 px-8">
-          Tu cuenta se creó con éxito 🎉 Ya podés descubrir campañas, postularte a oportunidades y empezar a monetizar tu contenido como creador.
-        </Text>
+        </HeadingL>
 
-    
+        <BodyM className="text-primary-600 text-center text-base mb-8 px-8">
+          Tu cuenta se creó con éxito 🎉 Ya podés descubrir campañas, postularte a oportunidades y empezar a monetizar tu contenido como creador.
+        </BodyM>
+
         <View className="px-6 w-full">
           <PrimaryButton 
             title="Comenzar"

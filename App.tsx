@@ -6,10 +6,10 @@
  */
 
 import React, { useState } from 'react';
-import { AuthScreen, EmailScreen, NameScreen, PasswordScreen, AboutScreen, SocialMediaScreen, AccountCreatedScreen } from './src/screens';
+import { AuthScreen, EmailScreen, NameScreen, PasswordScreen, AboutScreen, SocialMediaScreen, AccountCreatedScreen, HomeScreen } from './src/screens';
 import './global.css';
 
-type Screen = 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated';
+type Screen = 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home';
 
 function App(): React.JSX.Element {
   const [currentScreen, setCurrentScreen] = useState<Screen>('Auth');
@@ -33,6 +33,8 @@ function App(): React.JSX.Element {
       return <SocialMediaScreen onNavigate={navigate} />;
     case 'AccountCreated':
       return <AccountCreatedScreen onNavigate={navigate} />;
+    case 'Home':
+      return <HomeScreen onNavigate={navigate} />;
     default:
       return <AuthScreen onNavigate={navigate} />;
   }

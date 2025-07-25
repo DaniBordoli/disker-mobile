@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
+import { HeadingM } from '../components/typography/Headings';
+import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
 
 interface PasswordScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
@@ -87,12 +89,12 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
     
       <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
         <TouchableOpacity 
-          className="w-10 h-10 items-center justify-center"
+          className="w-8 h-8 items-center justify-center"
           onPress={() => onNavigate('Name')}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}
-            className="w-6 h-6"
+            className="w-5 h-5"
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -100,12 +102,14 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
         <View className="items-center justify-center">
           <Image
             source={require('../public/Logo.png')}
-            className="w-12 h-10"
+            className="w-12 h-11"
             resizeMode="contain"
           />
         </View>
         
-        <Text className="text-gray-600 font-medium">3/5</Text>
+        <View className="w-8 items-center justify-center">
+          <BodyMStrong className="text-gray-600 font-medium">3/5</BodyMStrong>
+        </View>
       </View>
 
 
@@ -114,12 +118,12 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <Text className="text-2xl text-center font-bold text-black mb-2">
+        <HeadingM className="text-2xl text-center font-bold text-primary-950 mb-2 px-2">
           Lautaro, vamos a crear una clave segura para tu cuenta
-        </Text>
-        <Text className="text-gray-600 text-center text-base mb-8">
+        </HeadingM>
+        <BodyM className="text-primary-600 text-center text-base px-8 mb-8">
           Esto te va a ayudar a mantener tu perfil protegido.
-        </Text>
+        </BodyM>
 
       
         <FloatingLabelInput
@@ -164,15 +168,15 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
                   />
                 </View>
               )}
-              <Text className={`text-sm ${
+              <BodyS className={`text-sm ${
                 password.length === 0 
-                  ? 'text-gray-500' 
+                  ? 'text-primary-600' 
                   : index === 0 
                     ? (validation.isValid ? 'text-green-600' : 'text-red-600') 
                     : (validation.isValid ? 'text-black' : 'text-red-600') 
               }`}>
                 {validation.text}
-              </Text>
+              </BodyS>
             </View>
           ))}
         </View>
