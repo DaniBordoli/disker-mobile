@@ -34,7 +34,6 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
   return (
     <View className="flex-1 bg-white px-6 pt-12 pb-8">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
    
       <View className="flex-row items-center justify-between mb-8">
         <TouchableOpacity 
@@ -51,7 +50,7 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
         <View className="items-center justify-center">
           <Image
             source={require('../public/Logo.png')}
-            className="w-12 h-11"
+            className="w-12 h-11 mt-2"
             resizeMode="contain"
           />
         </View>
