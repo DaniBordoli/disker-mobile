@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
 import { HeadingM } from '../components/typography/Headings';
-import { BodyM, BodyMStrong } from '../components/typography/BodyText';
+import { BodyM, BodyMStrong, BodyS } from '../components/typography/BodyText';
 
 interface NameScreenProps {
   onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
@@ -12,11 +12,28 @@ interface NameScreenProps {
 export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
 
   const handleContinue = () => {
-    if (firstName.trim() && lastName.trim()) {
-      console.log('Continue with name:', { firstName, lastName });
+    let hasError = false;
     
+    if (!firstName.trim()) {
+      setFirstNameError(true);
+      hasError = true;
+    } else {
+      setFirstNameError(false);
+    }
+    
+    if (!lastName.trim()) {
+      setLastNameError(true);
+      hasError = true;
+    } else {
+      setLastNameError(false);
+    }
+    
+    if (!hasError) {
+      console.log('Continue with name:', { firstName, lastName });
       onNavigate('Password');
     }
   };
@@ -41,7 +58,7 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
         <View className="items-center justify-center">
           <Image
             source={require('../public/Logo.png')}
-            className="w-12 h-11"
+            className="w-12 h-11 mt-2"
             resizeMode="contain"
           />
         </View>
@@ -63,18 +80,46 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
         <FloatingLabelInput
           label="Nombre"
           value={firstName}
-          onChangeText={setFirstName}
+          onChangeText={(text) => {
+            setFirstName(text);
+            if (text.trim()) setFirstNameError(false);
+          }}
           autoCapitalize="words"
           autoCorrect={false}
         />
+        {firstNameError && (
+          <BodyS className="text-red-600 mb-2 flex-row items-center">
+            <Image
+              source={require('../public/Icons/IconWarning.png')}
+              className="w-4 h-4 mr-1"
+              style={{ tintColor: '#DC2626' }}
+              resizeMode="contain"
+            />
+            {' '}Ingresa tu nombre
+          </BodyS>
+        )}
 
         <FloatingLabelInput
           label="Apellido"
           value={lastName}
-          onChangeText={setLastName}
+          onChangeText={(text) => {
+            setLastName(text);
+            if (text.trim()) setLastNameError(false);
+          }}
           autoCapitalize="words"
           autoCorrect={false}
         />
+        {lastNameError && (
+          <BodyS className="text-red-600 mb-2 flex-row items-center">
+            <Image
+              source={require('../public/Icons/IconWarning.png')}
+              className="w-4 h-4 mr-1"
+              style={{ tintColor: '#DC2626' }}
+              resizeMode="contain"
+            />
+            {' '}Ingresa tu apellido
+          </BodyS>
+        )}
       </View>
 
       

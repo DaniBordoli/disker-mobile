@@ -36,7 +36,7 @@ export const AccountCreatedScreen: React.FC<AccountCreatedScreenProps> = ({ onNa
 
       
         <HeadingL className="text-3xl font-bold text-primary-950 text-center mb-4">
-          ¡Bienvenido a Diskerr!
+          ¡Bienvenido a Disker!
         </HeadingL>
 
         <BodyM className="text-primary-600 text-center text-base mb-8 px-8">

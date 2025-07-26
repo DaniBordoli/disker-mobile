@@ -95,7 +95,7 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
           <View className="items-center justify-center">
             <Image
               source={require('../public/Logo.png')}
-              className="w-12 h-11"
+              className="w-12 h-11 mt-2"
               resizeMode="contain"
             />
           </View>
