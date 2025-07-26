@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { HeadingS } from '../typography/Headings';
+import { BodyM, BodyMLink } from '../typography/BodyText';
 
 interface VerifyEmailModalProps {
   visible: boolean;
@@ -92,34 +94,39 @@ export const VerifyEmailModal: React.FC<VerifyEmailModalProps> = ({
           <View className="bg-white rounded-t-3xl px-6 py-8 w-full">
             
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold text-black">
+              <HeadingS className="text-xl font-bold text-black">
                 Verificá tu email
-              </Text>
+              </HeadingS>
               <TouchableOpacity onPress={onClose} className="p-1">
                 <Text className="text-2xl text-gray-400">×</Text>
               </TouchableOpacity>
             </View>
 
            
-            <Text className="text-gray-600 text-base mb-1">
+            <BodyM className="text-primary-500 mb-1">
               Ingresá el código que enviamos a tu correo
-            </Text>
-            <Text className="text-black font-medium mb-8">
+            </BodyM>
+            <BodyM className="text-primary-500 mb-8">
               {email}
-            </Text>
+            </BodyM>
 
          
-            <View className="flex-row justify-center gap-3 mb-6">
+            <View className="flex-row justify-center gap-2 mb-6">
               {code.map((digit, index) => (
                 <RNTextInput
                   key={index}
                   ref={(ref) => (inputRefs.current[index] = ref)}
-                  className="w-16 h-14 border-2 border-gray-300 rounded-xl text-center text-xl font-bold text-black bg-white"
+                  className={`w-16 h-14 border-2 rounded-xl text-center text-xl font-bold text-black ${
+                    timeLeft === 0 
+                      ? 'bg-primary-200 border-primary-300 text-primary-300' 
+                      : 'bg-white border-gray-300'
+                  }`}
                   value={digit}
                   onChangeText={(value) => handleCodeChange(value, index)}
                   onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
                   maxLength={1}
                   selectTextOnFocus
+                  editable={timeLeft > 0}
                 />
               ))}
             </View>
@@ -139,20 +146,20 @@ export const VerifyEmailModal: React.FC<VerifyEmailModalProps> = ({
               onPress={handleVerify}
               disabled={!isCodeComplete}
             >
-              <Text className={`text-center font-semibold text-base ${
+              <BodyM className={`text-center font-semibold text-base ${
                 isCodeComplete 
                   ? 'text-white' 
                   : 'text-gray-400'
               }`}>
                 Validar cuenta
-              </Text>
+              </BodyM>
             </TouchableOpacity>
 
            
             <TouchableOpacity className="items-center">
               <Text className="text-black text-base">
-                <Text className="text-gray-600 underline">¿No recibiste el código? </Text>
-                <Text className="underline font-medium">Reenviar</Text>
+                <BodyMLink className="text-primary-950 underline">¿No recibiste el código? </BodyMLink>
+                <BodyMLink className="underline text-primary-950 font-medium">Reenviar</BodyMLink  >
               </Text>
             </TouchableOpacity>
           </View>

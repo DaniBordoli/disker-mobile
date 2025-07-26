@@ -75,7 +75,7 @@ export const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
         <View className="relative">
           <RNTextInput
             ref={inputRef}
-            className={`w-full py-5 px-4 rounded-xl border border-gray-300 bg-white text-gray-900 text-base ${className || ''}`}
+            className={`w-full py-5 px-4 rounded-xl border ${isFocused ? 'border-primary-950' : 'border-primary-300'} bg-white text-gray-900 text-base ${className || ''}`}
             value={value}
             onFocus={handleFocus}
             onBlur={handleBlur}
