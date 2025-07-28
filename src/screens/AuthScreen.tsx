@@ -4,7 +4,7 @@ import { PrimaryButton, SocialButton } from '../components/buttons';
 import { BodyLLink, BodyM } from '../components/typography/BodyText';
 
 interface AuthScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
+  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'Home') => void;
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
@@ -60,7 +60,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
         <PrimaryButton 
           title="Crear cuenta gratis"
           variant="dark"
-          onPress={() => onNavigate('Email')}
+          onPress={() => onNavigate('Home')}
         />
 
      
