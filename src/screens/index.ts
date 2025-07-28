@@ -7,5 +7,6 @@ export { AboutScreen } from './AboutScreen';
 export { SocialMediaScreen } from './SocialMediaScreen';
 export { AccountCreatedScreen } from './AccountCreatedScreen';
 export { HomeScreen } from './HomeScreen';
+export { CampaignDetailScreen } from './CampaignDetailScreen';
 
 
