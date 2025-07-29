@@ -6,7 +6,7 @@ export { PasswordScreen } from './PasswordScreen';
 export { AboutScreen } from './AboutScreen';
 export { SocialMediaScreen } from './SocialMediaScreen';
 export { AccountCreatedScreen } from './AccountCreatedScreen';
-export { HomeScreen } from './HomeScreen';
+export { default as HomeScreen } from './HomeScreen';
 export { CampaignDetailScreen } from './CampaignDetailScreen';
 
 

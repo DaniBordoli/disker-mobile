@@ -14,77 +14,70 @@ import { CampaignCard } from '../components/cards/CampaignCard';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 
 interface HomeScreenProps {
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home') => void;
+  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats') => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
-  const campaigns = [
-    {
-      brand: {
-        logo: require('../public/Icons/NiveaLogo.png'),
-        name: 'Rutina Glow'
-      },
-      title: 'Rutina Glow',
-      description: 'Contá tu experiencia con nuestra línea de skincare natural.',
-      startDate: '20/05',
-      type: 'Campaña de evento',
-      location: 'Argentina, Perú y Brasil',
-      amount: '350',
-      currency: 'USD',
-      actionLabel: 'Cierra esta semana',
-      actionColor: '#F3E7FF',
-      socialIcons: [
-        require('../public/Icons/InstagramRoundedColorless.png'),
-        require('../public/Icons/TiktokRounded.png'),
-        require('../public/Icons/YoutubeRounded.png')
-      ],
-      onPress: () => console.log('Campaign pressed'),
-      onActionPress: () => console.log('Action pressed')
+const campaigns = [
+  {
+    brand: {
+      logo: require('../public/Icons/NiveaLogo.png'),
+      name: 'Rutina Glow'
     },
-    {
-      brand: {
-        logo: require('../public/Icons/NikeLogo.png'),
-        name: 'Run With Me'
-      },
-      title: 'Run With Me',
-      description: 'Mostrá cómo usás tus zapatillas Nike en tu día a día.',
-      startDate: '17/05',
-      type: 'Campaña musical',
-      location: 'Argentina, Colombia y Chile',
-      amount: '300',
-      currency: 'USD',
-      actionLabel: 'Cierra esta semana',
-      actionColor: '#F3E7FF',
-      socialIcons: [
-        require('../public/Icons/InstagramRoundedColorless.png'),
-        require('../public/Icons/TiktokRounded.png')
-      ],
-      onPress: () => console.log('Campaign pressed'),
-      onActionPress: () => console.log('Action pressed')
+    title: 'Rutina Glow',
+    description: 'Contá tu experiencia con nuestra línea de skincare natural.',
+    startDate: '20/05',
+    type: 'Campaña de evento',
+    location: 'Argentina, Perú y Brasil',
+    amount: '350',
+    currency: 'USD',
+    actionLabel: 'Cierra esta semana',
+    actionColor: '#F3E7FF',
+    socialIcons: [
+      require('../public/Icons/InstagramRoundedColorless.png'),
+      require('../public/Icons/TiktokRounded.png'),
+      require('../public/Icons/YoutubeRounded.png')
+    ]
+  },
+  {
+    brand: {
+      logo: require('../public/Icons/NikeLogo.png'),
+      name: 'Run With Me'
     },
-    {
-      brand: {
-        logo: require('../public/Icons/AdidasLogo.png'),
-        name: 'Movete con estilo by Stay Fresh'
-      },
-      title: 'Movete con estilo by Stay Fresh',
-      description: 'Presentá tu outfit urbano favorito con la nueva colección SS24.',
-      startDate: '15/05',
-      type: 'Campaña musical',
-      location: 'Presencial',
-      amount: '500',
-      currency: 'USD',
-      actionLabel: 'Cierra esta semana',
-      actionColor: '#F3E7FF',
-      socialIcons: [
-        require('../public/Icons/YoutubeRounded.png'),
-      ],
-      onPress: () => console.log('Campaign pressed'),
-      onActionPress: () => console.log('Action pressed')
-      
-    }
-  ];
+    title: 'Run With Me',
+    description: 'Mostrá cómo usás tus zapatillas Nike en tu día a día.',
+    startDate: '17/05',
+    type: 'Campaña musical',
+    location: 'Argentina, Colombia y Chile',
+    amount: '300',
+    currency: 'USD',
+    actionLabel: 'Cierra esta semana',
+    actionColor: '#F3E7FF',
+    socialIcons: [
+      require('../public/Icons/InstagramRoundedColorless.png'),
+      require('../public/Icons/TiktokRounded.png')
+    ]
+  },
+  {
+    brand: {
+      logo: require('../public/Icons/AdidasLogo.png'),
+      name: 'Movete con estilo by Stay Fresh'
+    },
+    title: 'Movete con estilo by Stay Fresh',
+    description: 'Presentá tu outfit urbano favorito con la nueva colección SS24.',
+    startDate: '15/05',
+    type: 'Campaña musical',
+    location: 'Presencial',
+    amount: '500',
+    currency: 'USD',
+    actionLabel: 'Cierra esta semana',
+    actionColor: '#F3E7FF',
+    socialIcons: [
+      require('../public/Icons/YoutubeRounded.png'),
+    ]
+  }
+];
 
+const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
   return (
     <SafeAreaView className="flex-1 bg-primary-950">
       <StatusBar barStyle="light-content" backgroundColor="black" />
@@ -113,6 +106,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <CampaignCard
               key={index}
               {...campaign}
+              onPress={() => onNavigate && onNavigate('CampaignDetail')}
+              onActionPress={() => {}}
             />
           ))}
         </ScrollView>
@@ -144,3 +139,5 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
     </SafeAreaView>
   );
 };
+
+export default HomeScreen;

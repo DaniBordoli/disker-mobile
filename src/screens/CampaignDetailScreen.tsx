@@ -16,46 +16,7 @@ import {
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyS } from '../components/typography/BodyText';
 import { PrimaryButton } from '../components/buttons/PrimaryButton';
-
-interface DeliverableItem {
-  emoji: string;
-  text: string;
-}
-
-interface PlatformDeliverable {
-  platform: 'instagram' | 'tiktok';
-  icon: any;
-  backgroundColor: string;
-  totalCount: number;
-  items: DeliverableItem[];
-}
-
-interface CampaignData {
-  id: string;
-  title: string;
-  brandLogo: any;
-  startDate: string;
-  campaignType: string;
-  location: string;
-  aboutProject: {
-    summary: string;
-    fullDescription: string;
-  };
-  deliverables: PlatformDeliverable[];
-  requirements: string[];
-  termsAndConditions: string;
-  categories: string[];
-  price: string;
-  currency: string;
-  warningMessage?: string;
-  platforms: ('instagram' | 'tiktok')[];
-}
-
-interface CampaignDetailScreenProps {
-  campaignData?: CampaignData;
-  onGoBack?: () => void;
-  onApply?: () => void;
-}
+import { CampaignData, CampaignDetailScreenProps } from '../types/campaign';
 
 export const CampaignDetailScreen: React.FC<CampaignDetailScreenProps> = ({ 
   campaignData,
