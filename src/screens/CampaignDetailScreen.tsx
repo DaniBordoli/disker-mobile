@@ -21,7 +21,8 @@ import { CampaignData, CampaignDetailScreenProps } from '../types/campaign';
 export const CampaignDetailScreen: React.FC<CampaignDetailScreenProps> = ({ 
   campaignData,
   onGoBack,
-  onApply 
+  onApply,
+  onNavigate 
 }) => {
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -377,7 +378,7 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
             <PrimaryButton 
               title="Postularme" 
               variant="dark"
-              onPress={onApply}
+              onPress={() => onNavigate && onNavigate('CampaignIdeaScreen')}
             />
           </View>
         </View>
