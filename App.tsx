@@ -6,12 +6,12 @@
  */
 
 import React, { useState } from 'react';
-import { AuthScreen, EmailScreen, NameScreen, PasswordScreen, AboutScreen, SocialMediaScreen, AccountCreatedScreen, HomeScreen, CampaignDetailScreen } from './src/screens';
+import { AuthScreen, EmailScreen, NameScreen, PasswordScreen, AboutScreen, SocialMediaScreen, AccountCreatedScreen, HomeScreen, CampaignDetailScreen, ProfileScreen } from './src/screens';
 import './global.css';
 import { AudienceStatsScreen } from './src/screens/AudienceStatsScreen';
 import { CampaignIdeaScreen } from './src/screens/CampaignIdeaScreen';
 
-type Screen = 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'CampaignIdeaScreen';
+type Screen = 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'CampaignIdeaScreen' | 'Profile';
 
 function App(): React.JSX.Element {
   const [currentScreen, setCurrentScreen] = useState<Screen>('Auth');
@@ -41,6 +41,8 @@ function App(): React.JSX.Element {
       return <CampaignDetailScreen onGoBack={() => navigate('Home')} onNavigate={navigate} />;
     case 'CampaignIdeaScreen':
       return <CampaignIdeaScreen onGoBack={() => navigate('CampaignDetail')} />;
+    case 'Profile':
+      return <ProfileScreen onNavigate={navigate} />;
     default:
       return <AuthScreen onNavigate={navigate} />;
   }

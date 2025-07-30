@@ -11,41 +11,58 @@ interface NavItem {
 
 interface BottomNavBarProps {
   items?: NavItem[];
+  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen') => void;
+  currentScreen?: string;
 }
 
-export const BottomNavBar: React.FC<BottomNavBarProps> = ({ items }) => {
-  const [activeTab, setActiveTab] = useState('Explora');
+export const BottomNavBar: React.FC<BottomNavBarProps> = ({ items, onNavigate, currentScreen }) => {
+  const [activeTab, setActiveTab] = useState(currentScreen || 'Explora');
 
   const defaultNavItems = [
     {
       label: 'Explora',
       icon: require('../../public/NavbarIcons/IconCompass.png'),
       isActive: activeTab === 'Explora',
-      onPress: () => setActiveTab('Explora')
+      onPress: () => {
+        if (activeTab !== 'Explora') setActiveTab('Explora');
+        onNavigate && onNavigate('Home');
+      }
     },
     {
       label: 'Campañas',
       icon: require('../../public/NavbarIcons/IconMegaphone.png'),
       isActive: activeTab === 'Campañas',
-      onPress: () => setActiveTab('Campañas')
+      onPress: () => {
+        setActiveTab('Campañas');
+ 
+      }
     },
     {
       label: 'Hera',
       icon: require('../../public/NavbarIcons/IconStars.png'),
       isActive: activeTab === 'Hera',
-      onPress: () => setActiveTab('Hera')
+      onPress: () => {
+        setActiveTab('Hera');
+       
+      }
     },
     {
       label: 'Mensajes',
       icon: require('../../public/NavbarIcons/IconChat.png'),
       isActive: activeTab === 'Mensajes',
-      onPress: () => setActiveTab('Mensajes')
+      onPress: () => {
+        setActiveTab('Mensajes');
+     
+      }
     },
     {
       label: 'Perfil',
       icon: require('../../public/NavbarIcons/IconUser.png'),
       isActive: activeTab === 'Perfil',
-      onPress: () => setActiveTab('Perfil')
+      onPress: () => {
+        setActiveTab('Perfil');
+        onNavigate && onNavigate('Profile');
+      }
     }
   ];
 

@@ -14,7 +14,7 @@ import { CampaignCard } from '../components/cards/CampaignCard';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 
 interface HomeScreenProps {
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats') => void;
+  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen') => void;
 }
 
 const campaigns = [
@@ -135,7 +135,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
         </TouchableOpacity>
       </View>
 
-      <BottomNavBar />
+      <BottomNavBar
+        items={undefined}
+        onNavigate={onNavigate}
+        currentScreen="Explora"
+      />
     </SafeAreaView>
   );
 };

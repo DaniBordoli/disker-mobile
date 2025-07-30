@@ -9,4 +9,6 @@ export { AccountCreatedScreen } from './AccountCreatedScreen';
 export { default as HomeScreen } from './HomeScreen';
 export { CampaignDetailScreen } from './CampaignDetailScreen';
 
+export { default as ProfileScreen } from './ProfileScreen';
+
 
