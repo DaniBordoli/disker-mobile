@@ -1,13 +1,16 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton, SocialButton } from '../components/buttons';
 import { BodyLLink, BodyM } from '../components/typography/BodyText';
 
-interface AuthScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'Home' | 'AudienceStats' | 'CampaignIdeaScreen') => void;
-}
+type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Auth'>;
 
-export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
+export const AuthScreen: React.FC = () => {
+  const navigation = useNavigation<AuthScreenNavigationProp>();
+
   return (
     <View className="flex-1 bg-white px-6 pt-16 pb-8">
       
@@ -60,7 +63,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
         <PrimaryButton 
           title="Crear cuenta gratis"
           variant="dark"
-          onPress={() => onNavigate('Email')}
+          onPress={() => navigation.navigate('Email')}
         />
 
      
@@ -97,7 +100,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
           className="items-center mt-4"
           onPress={() => console.log('Ya tengo cuenta')}
         >
-          <BodyLLink className="text-primary-950 font-medium text-lg underline" onPress={() => onNavigate('Home')}>
+          <BodyLLink className="text-primary-950 font-medium text-lg underline" onPress={() => navigation.navigate('Home')}>
             Ya tengo cuenta
           </BodyLLink>
         </TouchableOpacity>

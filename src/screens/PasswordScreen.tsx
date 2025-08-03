@@ -7,21 +7,23 @@ import {
   StatusBar, 
   ScrollView
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
 
-interface PasswordScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
-}
+type PasswordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Password'>;
 
 interface ValidationRule {
   text: string;
   isValid: boolean;
 }
 
-export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) => {
+export const PasswordScreen: React.FC = () => {
+  const navigation = useNavigation<PasswordScreenNavigationProp>();
   const [password, setPassword] = useState('');
   const [validations, setValidations] = useState<ValidationRule[]>([
     { text: 'Fuerza de la contraseña: aún no evaluada', isValid: false },
@@ -76,7 +78,7 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
     if (allValid && password.trim()) {
       console.log('Continue with password:', password);
     
-      onNavigate('About');
+      navigation.navigate('About');
     }
   };
 
@@ -90,7 +92,7 @@ export const PasswordScreen: React.FC<PasswordScreenProps> = ({ onNavigate }) =>
       <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
         <TouchableOpacity 
           className="w-8 h-8 items-center justify-center"
-          onPress={() => onNavigate('Name')}
+          onPress={() => navigation.goBack()}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}

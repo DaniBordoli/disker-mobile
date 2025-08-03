@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyMStrong, BodyS } from '../components/typography/BodyText';
 
-interface NameScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
-}
+type NameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Name'>;
 
-export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
+export const NameScreen: React.FC = () => {
+  const navigation = useNavigation<NameScreenNavigationProp>();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [firstNameError, setFirstNameError] = useState(false);
@@ -34,7 +36,7 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
     
     if (!hasError) {
       console.log('Continue with name:', { firstName, lastName });
-      onNavigate('Password');
+      navigation.navigate('Password');
     }
   };
 
@@ -46,7 +48,7 @@ export const NameScreen: React.FC<NameScreenProps> = ({ onNavigate }) => {
       <View className="flex-row items-center justify-between mb-8">
         <TouchableOpacity 
           className="w-8 h-8 items-center justify-center"
-          onPress={() => onNavigate('Email')}
+          onPress={() => navigation.goBack()}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}

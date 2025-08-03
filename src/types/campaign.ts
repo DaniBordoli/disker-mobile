@@ -34,9 +34,6 @@ export interface CampaignData {
 
 export interface CampaignDetailScreenProps {
   campaignData?: CampaignData;
-  onGoBack?: () => void;
-  onApply?: () => void;
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'CampaignIdeaScreen') => void;
 }
 
 

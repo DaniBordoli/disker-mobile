@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { HeadingM } from '../components/typography/Headings';
 import { PrimaryButton } from '../components/buttons';
 import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 import { FloatingLabelInput } from '../components/inputs';
 import { VerifyEmailModal } from '../components/modal/VerifyEmailModal';
 
-interface EmailScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About') => void;
-}
+type EmailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Email'>;
 
-export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
+export const EmailScreen: React.FC = () => {
+  const navigation = useNavigation<EmailScreenNavigationProp>();
   const [email, setEmail] = useState('');
   const [showVerifyModal, setShowVerifyModal] = useState(false);
 
@@ -24,7 +26,7 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
     console.log('Verification code:', code);
     setShowVerifyModal(false);
   
-    onNavigate('Name');
+    navigation.navigate('Name');
   };
 
   const handleCloseModal = () => {
@@ -38,7 +40,7 @@ export const EmailScreen: React.FC<EmailScreenProps> = ({ onNavigate }) => {
       <View className="flex-row items-center justify-between mb-8">
         <TouchableOpacity 
           className="w-8 h-8 items-center justify-center"
-          onPress={() => onNavigate('Auth')}
+          onPress={() => navigation.goBack()}
         >
           <Image
             source={require('../public/Icons/IconGoback.png')}
