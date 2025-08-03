@@ -5,18 +5,21 @@ import {
   Image, 
   StatusBar
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { HeadingL } from '../components/typography/Headings';
 import { BodyM } from '../components/typography/BodyText';
 
-interface AccountCreatedScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home') => void;
-}
+type AccountCreatedScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AccountCreated'>;
 
-export const AccountCreatedScreen: React.FC<AccountCreatedScreenProps> = ({ onNavigate }) => {
+export const AccountCreatedScreen: React.FC = () => {
+  const navigation = useNavigation<AccountCreatedScreenNavigationProp>();
+  
   const handleContinue = () => {
     console.log('Account creation completed');
-    onNavigate('Home');
+    navigation.navigate('Home');
   };
 
   return (

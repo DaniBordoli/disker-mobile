@@ -13,17 +13,24 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyS } from '../components/typography/BodyText';
 import { PrimaryButton } from '../components/buttons/PrimaryButton';
-import { CampaignData, CampaignDetailScreenProps } from '../types/campaign';
+import { CampaignData } from '../types/campaign';
+
+type CampaignDetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CampaignDetail'>;
+
+interface CampaignDetailScreenProps {
+  campaignData?: CampaignData;
+}
 
 export const CampaignDetailScreen: React.FC<CampaignDetailScreenProps> = ({ 
-  campaignData,
-  onGoBack,
-  onApply,
-  onNavigate 
+  campaignData
 }) => {
+  const navigation = useNavigation<CampaignDetailScreenNavigationProp>();
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -116,7 +123,7 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
         <View className="flex-row justify-between items-center px-4 py-3">
             <TouchableOpacity 
               className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center"
-              onPress={onGoBack}
+              onPress={() => navigation.goBack()}
             >
               <Image 
                 source={require('../public/Icons/IconGoback.png')}
@@ -152,7 +159,7 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
           <View className="flex-row justify-between items-center px-4 pt-4 pb-6">
             <TouchableOpacity 
               className="w-10 h-10 bg-white rounded-full items-center justify-center"
-              onPress={onGoBack}
+              onPress={() => navigation.goBack()}
             >
               <Image 
                 source={require('../public/Icons/IconGoback.png')}
@@ -378,7 +385,7 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
             <PrimaryButton 
               title="Postularme" 
               variant="dark"
-              onPress={() => onNavigate && onNavigate('CampaignIdeaScreen')}
+              onPress={() => navigation.navigate('CampaignIdeaScreen')}
             />
           </View>
         </View>

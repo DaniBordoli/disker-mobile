@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, TextInput, Modal, KeyboardAvoidingView, Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyMLink, BodyS } from '../components/typography/BodyText';
 import { PrimaryButton } from '../components/buttons/PrimaryButton';
 import { HeadingS } from '../components/typography/Headings';
 
-export const CampaignIdeaScreen: React.FC<{ onGoBack?: () => void }> = ({ onGoBack }) => {
+type CampaignIdeaScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CampaignIdeaScreen'>;
+
+export const CampaignIdeaScreen: React.FC = () => {
+  const navigation = useNavigation<CampaignIdeaScreenNavigationProp>();
   const [idea, setIdea] = useState('');
   const [showCompleteLaterModal, setShowCompleteLaterModal] = useState(false);
   const [showWhyModal, setShowWhyModal] = useState(false);
@@ -13,7 +19,7 @@ export const CampaignIdeaScreen: React.FC<{ onGoBack?: () => void }> = ({ onGoBa
   return (
     <View className="flex-1 bg-white">
       <View className="flex-row items-center px-4 pt-4 pb-2">
-        <TouchableOpacity onPress={onGoBack} className="w-10 h-10 bg-white rounded-full items-center justify-center border border-primary-100">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 bg-white rounded-full items-center justify-center border border-primary-100">
           <Image 
             source={require('../public/Icons/IconGoback.png')}
             className="w-5 h-5"

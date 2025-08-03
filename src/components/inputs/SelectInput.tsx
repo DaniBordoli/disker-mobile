@@ -29,11 +29,19 @@ export const SelectInput: React.FC<SelectInputProps> = ({
       <TouchableWithoutFeedback onPress={onPress}>
         <View className="relative">
           <TouchableOpacity
-            className={`w-full py-5 px-4 rounded-xl border border-primary-300 bg-white flex-row items-center justify-between ${className || ''}`}
+            className={`w-full py-5 px-4 rounded-xl border bg-white flex-row items-center justify-between ${
+              error ? 'border-red-500' : 'border-primary-300'
+            } ${className || ''}`}
             onPress={onPress}
             activeOpacity={0.7}
           >
-            <Text className={`text-base ${value ? 'text-gray-900' : 'text-gray-400'}`}>
+            <Text className={`text-base ${
+              value 
+                ? 'text-gray-900' 
+                : error 
+                  ? 'text-red-400' 
+                  : 'text-gray-400'
+            }`}>
               {value || placeholder || 'País'}
             </Text>
             <Image
@@ -51,9 +59,16 @@ export const SelectInput: React.FC<SelectInputProps> = ({
         </View>
       </TouchableWithoutFeedback>
       {error && (
-        <Text className="text-red-500 text-sm mt-1">
-          {error}
-        </Text>
+        <View className="flex-row items-center mt-1">
+          <Image 
+            source={require('../../public/Icons/IconWarning.png')} 
+            className="w-4 h-4 mr-2" 
+            style={{ tintColor: '#DC2626' }}
+          />
+          <Text className="text-red-600 text-sm">
+            {error}
+          </Text>
+        </View>
       )}
     </View>
   );

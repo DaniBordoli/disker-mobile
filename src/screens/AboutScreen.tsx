@@ -9,17 +9,19 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton, SelectionButton } from '../components/buttons';
 import { FloatingLabelInput, DateInput, SelectInput } from '../components/inputs';
 import { CountryPickerModal } from '../components/modal/CountryPickerModal';
 import { HeadingM, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
 
-interface AboutScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia') => void;
-}
+type AboutScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'About'>;
 
-export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
+export const AboutScreen: React.FC = () => {
+  const navigation = useNavigation<AboutScreenNavigationProp>();
   const [gender, setGender] = useState<'Masculino' | 'Femenino' | ''>('');
   const [birthDate, setBirthDate] = useState('');
   const [country, setCountry] = useState('');
@@ -30,7 +32,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
     if (gender && birthDate && country && city) {
       console.log('Continue with data:', { gender, birthDate, country, city });
     
-      onNavigate('SocialMedia');
+      navigation.navigate('SocialMedia');
     }
   };
 
@@ -70,7 +72,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onNavigate }) => {
         <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
           <TouchableOpacity 
             className="w-8 h-8 items-center justify-center"
-            onPress={() => onNavigate('Password')}
+            onPress={() => navigation.goBack()}
           >
             <Image
               source={require('../public/Icons/IconGoback.png')}

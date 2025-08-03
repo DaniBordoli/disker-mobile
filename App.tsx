@@ -5,47 +5,17 @@
  * @format
  */
 
-import React, { useState } from 'react';
-import { AuthScreen, EmailScreen, NameScreen, PasswordScreen, AboutScreen, SocialMediaScreen, AccountCreatedScreen, HomeScreen, CampaignDetailScreen, ProfileScreen } from './src/screens';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { RootNavigator } from './src/navigation';
 import './global.css';
-import { AudienceStatsScreen } from './src/screens/AudienceStatsScreen';
-import { CampaignIdeaScreen } from './src/screens/CampaignIdeaScreen';
-
-type Screen = 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'CampaignIdeaScreen' | 'Profile';
 
 function App(): React.JSX.Element {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('Auth');
-
-  const navigate = (screen: Screen) => {
-    setCurrentScreen(screen);
-  };
-
-  switch (currentScreen) {
-    case 'Auth':
-      return <AuthScreen onNavigate={navigate} />;
-    case 'Email':
-      return <EmailScreen onNavigate={navigate} />;
-    case 'Name':
-      return <NameScreen onNavigate={navigate} />;
-    case 'Password':
-      return <PasswordScreen onNavigate={navigate} />;
-    case 'About':
-      return <AboutScreen onNavigate={navigate} />;
-    case 'SocialMedia':
-      return <SocialMediaScreen onNavigate={navigate} />;
-    case 'AccountCreated':
-      return <AccountCreatedScreen onNavigate={navigate} />;
-    case 'Home':
-      return <HomeScreen onNavigate={navigate} />;
-    case 'CampaignDetail':
-      return <CampaignDetailScreen onGoBack={() => navigate('Home')} onNavigate={navigate} />;
-    case 'CampaignIdeaScreen':
-      return <CampaignIdeaScreen onGoBack={() => navigate('CampaignDetail')} />;
-    case 'Profile':
-      return <ProfileScreen onNavigate={navigate} />;
-    default:
-      return <AuthScreen onNavigate={navigate} />;
-  }
+  return (
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
+  );
 }
 
 export default App;

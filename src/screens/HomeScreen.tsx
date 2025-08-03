@@ -8,14 +8,15 @@ import {
   ScrollView,
   SafeAreaView
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM } from '../components/typography/BodyText';
 import { CampaignCard } from '../components/cards/CampaignCard';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 
-interface HomeScreenProps {
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen') => void;
-}
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const campaigns = [
   {
@@ -77,7 +78,9 @@ const campaigns = [
   }
 ];
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+  
   return (
     <SafeAreaView className="flex-1 bg-primary-950">
       <StatusBar barStyle="light-content" backgroundColor="black" />
@@ -106,7 +109,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <CampaignCard
               key={index}
               {...campaign}
-              onPress={() => onNavigate && onNavigate('CampaignDetail')}
+              onPress={() => navigation.navigate('CampaignDetail')}
               onActionPress={() => {}}
             />
           ))}
@@ -137,7 +140,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
 
       <BottomNavBar
         items={undefined}
-        onNavigate={onNavigate}
+        onNavigate={(screen) => navigation.navigate(screen as any)}
         currentScreen="Explora"
       />
     </SafeAreaView>

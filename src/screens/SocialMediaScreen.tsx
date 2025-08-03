@@ -9,13 +9,14 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 
-interface SocialMediaScreenProps {
-  onNavigate: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated') => void;
-}
+type SocialMediaScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SocialMedia'>;
 
 interface SocialPlatform {
   id: string;
@@ -24,7 +25,8 @@ interface SocialPlatform {
   selected: boolean;
 }
 
-export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate }) => {
+export const SocialMediaScreen: React.FC = () => {
+  const navigation = useNavigation<SocialMediaScreenNavigationProp>();
   const [socialPlatforms, setSocialPlatforms] = useState<SocialPlatform[]>([
     {
       id: 'tiktok',
@@ -60,7 +62,7 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
     const selectedPlatforms = socialPlatforms.filter(platform => platform.selected);
     console.log('Selected social platforms:', selectedPlatforms);
   
-    onNavigate('AccountCreated');
+    navigation.navigate('AccountCreated');
   };
 
   const handleSkip = () => {
@@ -83,7 +85,7 @@ export const SocialMediaScreen: React.FC<SocialMediaScreenProps> = ({ onNavigate
         <View className="flex-row items-center justify-between mb-8 px-6 pt-12">
           <TouchableOpacity 
             className="w-8 h-8 items-center justify-center"
-            onPress={() => onNavigate('About')}
+            onPress={() => navigation.goBack()}
           >
             <Image
               source={require('../public/Icons/IconGoback.png')}

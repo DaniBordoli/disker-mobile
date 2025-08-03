@@ -11,7 +11,7 @@ interface NavItem {
 
 interface BottomNavBarProps {
   items?: NavItem[];
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen') => void;
+  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen' | 'Notifications') => void;
   currentScreen?: string;
 }
 

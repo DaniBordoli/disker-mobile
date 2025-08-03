@@ -1,23 +1,29 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyMLink, BodyS } from '../components/typography/BodyText';
 
-interface ProfileScreenProps {
-  onNavigate?: (screen: 'Auth' | 'Email' | 'Name' | 'Password' | 'About' | 'SocialMedia' | 'AccountCreated' | 'Home' | 'CampaignDetail' | 'AudienceStats' | 'Profile' | 'CampaignIdeaScreen') => void;
-}
+type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
+const ProfileScreen: React.FC = () => {
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
    
         <View className="px-6 pt-10 pb-4 bg-white">
           <View className="flex-row justify-end mb-2">
-            <View className="w-10 h-10 rounded-full bg-white border border-primary-100 items-center justify-center flex-row">
+            <TouchableOpacity 
+              className="w-10 h-10 rounded-full bg-white border border-primary-100 items-center justify-center flex-row"
+              onPress={() => navigation.navigate('Notifications')}
+            >
               <Image source={require('../public/ProfileScreenIcons/IconBell.png')} className="w-6 h-6" style={{ tintColor: '#191919' }} />
-            </View>
+            </TouchableOpacity>
           </View>
           <HeadingM className="text-primary-950 mb-6 text-left">Perfil</HeadingM>
           <View className="flex-row items-center mb-6">
@@ -49,12 +55,18 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
     
           <HeadingXS className="text-base font-semibold text-gray-900 mb-2">Mi cuenta</HeadingXS>
           <View className="bg-white rounded-xl mb-4">
-            <TouchableOpacity className="flex-row items-center py-4 border-b border-primary-100">
+            <TouchableOpacity 
+              className="flex-row items-center py-4 border-b border-primary-100"
+              onPress={() => navigation.navigate('PersonalInfo')}
+            >
               <Image source={require('../public/NavbarIcons/IconUser.png')} className="w-5 h-5 mr-3" style={{ tintColor: '#191919' }} />
               <BodyM className="flex-1 text-base text-gray-900">Información personal</BodyM>
               <Image source={require('../public/Icons/IconChevronRight.png')} className="w-7 h-7" style={{ tintColor: '#191919' }} />
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center py-4 border-b border-primary-100">
+            <TouchableOpacity 
+              className="flex-row items-center py-4 border-b border-primary-100"
+              onPress={() => navigation.navigate('PaymentMethods')}
+            >
               <Image source={require('../public/ProfileScreenIcons/IconBank.png')} className="w-5 h-5 mr-3" style={{ tintColor: '#191919' }} />
               <BodyM className="flex-1 text-base text-gray-900">Forma de cobro</BodyM>
               <Image source={require('../public/Icons/IconChevronRight.png')} className="w-7 h-7" style={{ tintColor: '#191919' }} />
@@ -69,7 +81,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
           
           <HeadingXS className="text-base font-semibold text-gray-900 mb-2">Preferencias</HeadingXS>
           <View className="bg-white rounded-xl mb-4">
-            <TouchableOpacity className="flex-row items-center py-4 border-b border-primary-100">
+            <TouchableOpacity 
+              className="flex-row items-center py-4 border-b border-primary-100"
+              onPress={() => navigation.navigate('Notifications')}
+            >
               <Image source={require('../public/ProfileScreenIcons/IconBell.png')} className="w-5 h-6 mr-3" style={{ tintColor: '#191919' }} />
               <BodyM className="flex-1 text-base text-gray-900">Notificaciones</BodyM>
               <Image source={require('../public/Icons/IconChevronRight.png')} className="w-7 h-7" style={{ tintColor: '#191919' }} />
@@ -107,7 +122,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <BottomNavBar onNavigate={onNavigate} currentScreen="Perfil" />
+      <BottomNavBar onNavigate={(screen) => navigation.navigate(screen as any)} currentScreen="Perfil" />
     </SafeAreaView>
   );
 };
