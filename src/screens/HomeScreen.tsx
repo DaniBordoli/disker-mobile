@@ -109,8 +109,13 @@ const HomeScreen: React.FC = () => {
             <CampaignCard
               key={index}
               {...campaign}
-              onPress={() => navigation.navigate('CampaignDetail')}
-              onActionPress={() => {}}
+              onPress={() => {
+                console.log('Navegando a CampaignDetail desde HomeScreen');
+                navigation.navigate('CampaignDetail');
+              }}
+              onActionPress={() => {
+                console.log('Action presionado en campaña:', campaign.title);
+              }}
             />
           ))}
         </ScrollView>
@@ -139,8 +144,6 @@ const HomeScreen: React.FC = () => {
       </View>
 
       <BottomNavBar
-        items={undefined}
-        onNavigate={(screen) => navigation.navigate(screen as any)}
         currentScreen="Explora"
       />
     </SafeAreaView>
