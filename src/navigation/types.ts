@@ -14,6 +14,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Notifications: undefined;
   PersonalInfo: undefined;
+  SocialMediaProfile: undefined;
   AddPaymentMethod: undefined;
   Paypal: undefined;
   PaymentMethods: undefined;

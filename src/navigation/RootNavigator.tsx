@@ -17,6 +17,7 @@ import { AudienceStatsScreen } from '../screens/AudienceStatsScreen';
 import { CampaignIdeaScreen } from '../screens/CampaignIdeaScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import SocialMediaProfileScreen from '../screens/SocialMediaProfileScreen';
 import PaypalScreen from '../screens/PaypalScreen';
 import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
 import type { RootStackParamList } from './types';
@@ -46,6 +47,7 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+      <Stack.Screen name="SocialMediaProfile" component={SocialMediaProfileScreen} />
       <Stack.Screen name="AddPaymentMethod" component={AddPaymentMethodScreen} />
       <Stack.Screen name="Paypal" component={PaypalScreen} />
       <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
