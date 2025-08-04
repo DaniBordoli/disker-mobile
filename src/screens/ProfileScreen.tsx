@@ -71,7 +71,10 @@ const ProfileScreen: React.FC = () => {
               <BodyM className="flex-1 text-base text-gray-900">Forma de cobro</BodyM>
               <Image source={require('../public/Icons/IconChevronRight.png')} className="w-7 h-7" style={{ tintColor: '#191919' }} />
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center py-4 border-b border-primary-100">
+            <TouchableOpacity 
+              className="flex-row items-center py-4 border-b border-primary-100"
+              onPress={() => navigation.navigate('SocialMediaProfile')}
+            >
               <Image source={require('../public/NavbarIcons/IconMegaphone.png')} className="w-5 h-5 mr-3" style={{ tintColor: '#191919' }} />
               <BodyM className="flex-1 text-base text-gray-900">Redes sociales</BodyM>
               <Image source={require('../public/Icons/IconChevronRight.png')} className="w-7 h-7" style={{ tintColor: '#191919' }} />
@@ -122,7 +125,7 @@ const ProfileScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <BottomNavBar onNavigate={(screen) => navigation.navigate(screen as any)} currentScreen="Perfil" />
+      <BottomNavBar currentScreen="Perfil" />
     </SafeAreaView>
   );
 };
