@@ -15,6 +15,8 @@ export type RootStackParamList = {
   Notifications: undefined;
   PersonalInfo: undefined;
   SocialMediaProfile: undefined;
+  Messages: undefined;
+  MessageDetail: { messageId: string; brand: string };
   AddPaymentMethod: undefined;
   Paypal: undefined;
   PaymentMethods: undefined;
