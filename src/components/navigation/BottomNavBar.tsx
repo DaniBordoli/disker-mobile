@@ -70,10 +70,16 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ items, currentScreen
       icon: require('../../public/NavbarIcons/IconChat.png'),
       isActive: activeTab === 'Mensajes',
       onPress: () => {
-        console.log('💬 Tab Mensajes presionado - No hay navegación configurada');
+        console.log('Navegando a Messages');
+        console.log('Navigation object:', navigation);
+        console.log('Attempting to navigate to: Messages');
         setActiveTab('Mensajes');
-        
-        // navigation.navigate('Messages');
+        try {
+          navigation.navigate('Messages');
+          console.log('Navegación a Messages exitosa');
+        } catch (error) {
+          console.error('Error navegando a Messages:', error);
+        }
       }
     },
     {
