@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, FlatList, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
@@ -25,6 +25,8 @@ interface Message {
 const MessagesScreen: React.FC = () => {
   const navigation = useNavigation<MessagesScreenNavigationProp>();
   const [activeFilter, setActiveFilter] = useState('Todos');
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   const filters = ['Todos', 'Campañas', 'Soporte', 'Favoritos', 'No leído'];
 
@@ -126,11 +128,15 @@ const MessagesScreen: React.FC = () => {
   );
 
   const renderMessage = ({ item }: { item: Message }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       className="flex-row items-center py-4 px-6 border-b border-gray-100"
       onPress={() => navigation.navigate('MessageDetail', { messageId: item.id, brand: item.brand })}
+      onLongPress={() => {
+        setSelectedMessage(item);
+        setShowOptionsModal(true);
+      }}
+      delayLongPress={300}
     >
-
       <View className="mr-3">
         <Image
           source={require('../public/Icons/NikeLogo.png')}
@@ -138,22 +144,17 @@ const MessagesScreen: React.FC = () => {
           resizeMode="contain"
         />
       </View>
-      
-   
       <View className="flex-1">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
             <View className="flex-row items-center mb-1">
-              <BodySStrong className={`text-base ${item.hasUnreadDot ? 'text-black font-semibold' : 'text-gray-700'}`}>
-                {item.brand}
-              </BodySStrong>
+              <BodySStrong className={`text-base ${item.hasUnreadDot ? 'text-black font-semibold' : 'text-gray-700'}`}>{item.brand}</BodySStrong>
               {item.tag && (
                 <View className="bg-violet-600 px-4 py-1 rounded-full ml-2">
                   <BodyS className="text-white">{item.tag}</BodyS>
                 </View>
               )}
             </View>
-            
             <View className="flex-row items-center">
               {item.iconType && (
                 <Image
@@ -176,7 +177,6 @@ const MessagesScreen: React.FC = () => {
               </BodyS>
             </View>
           </View>
-          
           <View className="items-end ml-3">
             <BodyS className="text-gray-400 text-xs mb-1">
               {item.time}
@@ -196,7 +196,6 @@ const MessagesScreen: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-
       <View className="px-6 pt-4 pb-2 bg-white">
         <View className="flex-row justify-end mb-2">
           <TouchableOpacity className="w-10 h-10 bg-white border border-primary-200 rounded-full items-center justify-center">
@@ -208,11 +207,9 @@ const MessagesScreen: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        
         <View className="mb-4">
           <HeadingM className="text-primary-950">Mensajes</HeadingM>
         </View>
-     
         <FlatList
           data={filters}
           renderItem={renderFilterItem}
@@ -222,7 +219,6 @@ const MessagesScreen: React.FC = () => {
           contentContainerStyle={{ paddingVertical: 8 }}
         />
       </View>
-
       <FlatList
         data={messages}
         renderItem={renderMessage}
@@ -230,8 +226,96 @@ const MessagesScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
-
       <BottomNavBar currentScreen="Mensajes" />
+      {/* Modal de opciones, igual al de MessageDetailScreen */}
+      <Modal
+        visible={showOptionsModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowOptionsModal(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1"
+        >
+          <View className="flex-1 bg-black/40 justify-end">
+            <View className="bg-white rounded-t-3xl px-6 py-8 w-full" style={{ minHeight: '58%', maxHeight: '60%' }}>
+              <View className="flex-row justify-between items-center mb-6">
+                <View className="flex-row items-center flex-1">
+                  <Image
+                    source={require('../public/Icons/NikeLogo.png')}
+                    className="w-9 h-9 mr-3"
+                    resizeMode="contain"
+                  />
+                  <View>
+                    <HeadingM className="text-xl font-bold text-primary-950">
+                      {selectedMessage?.brand}
+                    </HeadingM>
+                    <BodyS className="text-gray-500">ID: {selectedMessage?.id}</BodyS>
+                  </View>
+                </View>
+                <TouchableOpacity onPress={() => setShowOptionsModal(false)} className="p-1">
+                  <Image
+                    source={require('../public/Icons/IconClose.png')}
+                    className="w-4 h-4"
+                    style={{ tintColor: '#000000' }}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+                <View className="bg-white">
+                  <TouchableOpacity className="flex-row items-center py-6 border-b border-primary-100">
+                    <Image 
+                      source={require('../public/ProfileScreenIcons/IconDocument.png')} 
+                      className="w-6 h-6 mr-4" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                    <BodyM className="flex-1 text-lg text-gray-900">Ver campaña</BodyM>
+                    <Image 
+                      source={require('../public/Icons/IconChevronRight.png')} 
+                      className="w-7 h-7" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity className="flex-row items-center py-6 border-b border-primary-100">
+                    <Image 
+                      source={require('../public/Icons/IconEnvelope.png')} 
+                      className="w-6 h-6 mr-4" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                    <BodyM className="flex-1 text-lg text-gray-900">Marcar como leída</BodyM>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="flex-row items-center py-6 border-b border-primary-100">
+                    <Image 
+                      source={require('../public/Icons/IconStarNoFilled.png')} 
+                      className="w-6 h-6 mr-4" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                    <BodyM className="flex-1 text-lg text-gray-900">Marcar como favorito</BodyM>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="flex-row items-center py-6 border-b border-primary-100">
+                    <Image 
+                      source={require('../public/Icons/IconBox.png')} 
+                      className="w-6 h-6 mr-4" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                    <BodyM className="flex-1 text-lg text-gray-900">Archivar</BodyM>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="flex-row items-center py-6">
+                    <Image 
+                      source={require('../public/Icons/IconBellSlash.png')} 
+                      className="w-6 h-6 mr-4" 
+                      style={{ tintColor: '#191919' }} 
+                    />
+                    <BodyM className="flex-1 text-lg text-gray-900">Silenciar conversación</BodyM>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };
