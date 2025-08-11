@@ -20,4 +20,5 @@ export type RootStackParamList = {
   AddPaymentMethod: undefined;
   Paypal: undefined;
   PaymentMethods: undefined;
+  MyCampaigns: undefined;
 };

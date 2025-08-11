@@ -22,6 +22,7 @@ import MessagesScreen from '../screens/MessagesScreen';
 import MessageDetailScreen from '../screens/MessageDetailScreen';
 import PaypalScreen from '../screens/PaypalScreen';
 import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
+import MyCampaignsScreen from '../screens/MyCampaignsScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -54,7 +55,8 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="MessageDetail" component={MessageDetailScreen} />
       <Stack.Screen name="AddPaymentMethod" component={AddPaymentMethodScreen} />
       <Stack.Screen name="Paypal" component={PaypalScreen} />
-      <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+  <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+  <Stack.Screen name="MyCampaigns" component={MyCampaignsScreen} />
     </Stack.Navigator>
   );
 };

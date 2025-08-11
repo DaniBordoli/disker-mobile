@@ -48,10 +48,14 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ items, currentScreen
       icon: require('../../public/NavbarIcons/IconMegaphone.png'),
       isActive: activeTab === 'Campañas',
       onPress: () => {
-        console.log('Tab Campañas presionado');
+        console.log('Navegando a MyCampaigns');
         setActiveTab('Campañas');
-     
-        // navigation.navigate('Campaigns');
+        try {
+          navigation.navigate('MyCampaigns');
+          console.log('Navegación a MyCampaigns exitosa');
+        } catch (error) {
+          console.error('Error navegando a MyCampaigns:', error);
+        }
       }
     },
     {
