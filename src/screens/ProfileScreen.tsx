@@ -6,11 +6,22 @@ import type { RootStackParamList } from '../navigation';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyMLink, BodyS } from '../components/typography/BodyText';
+import { useAuthStore } from '../store/auth';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const user = useAuthStore((s) => s.currentUser);
+  const clearSession = useAuthStore((s) => s.clearSession);
+
+  const displayName = React.useMemo(() => {
+    if (user?.name && user.name.trim().length > 0) return user.name.trim();
+    if (user?.email) return user.email.split('@')[0];
+    return 'Usuario';
+  }, [user]);
+
+  const displayEmail = user?.email || '';
   
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -33,8 +44,8 @@ const ProfileScreen: React.FC = () => {
               resizeMode="cover"
             />
             <View>
-              <HeadingS className="text-lg text-black font-semibold mb-1">Lautaro Gómez</HeadingS>
-              <BodyS className="text-base text-primary-600">Lgomez@mail.com</BodyS>
+              <HeadingS className="text-lg text-black font-semibold mb-1">{displayName}</HeadingS>
+              <BodyS className="text-base text-primary-600">{displayEmail}</BodyS>
             </View>
           </View>
       
@@ -120,7 +131,14 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           
-          <TouchableOpacity className="mb-8">
+          <TouchableOpacity
+            className="mb-8"
+            onPress={async () => {
+              try {
+                await clearSession();
+              } catch {}
+            }}
+          >
             <BodyMLink className="text-primary-950 font-medium text-base">Cerrar sesión</BodyMLink>
           </TouchableOpacity>
         </View>

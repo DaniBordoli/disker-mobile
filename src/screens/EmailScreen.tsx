@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
@@ -8,6 +8,9 @@ import { PrimaryButton } from '../components/buttons';
 import { BodyM, BodyMStrong } from '../components/typography/BodyText';
 import { FloatingLabelInput } from '../components/inputs';
 import { VerifyEmailModal } from '../components/modal/VerifyEmailModal';
+import { LoadingOverlay } from '../components';
+import { registerUserStep1, confirmEmailStep2, scheduleProactiveRefresh } from '../services/api';
+import { useAuthStore, persistUser } from '../store/auth';
 
 type EmailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Email'>;
 
@@ -15,18 +18,80 @@ export const EmailScreen: React.FC = () => {
   const navigation = useNavigation<EmailScreenNavigationProp>();
   const [email, setEmail] = useState('');
   const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleContinue = () => {
-    if (email.trim()) {
+  const handleContinue = async () => {
+    if (loading) return;
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setErrorMsg(null);
+    setLoading(true);
+    try {
+      await registerUserStep1({ user: { email: trimmed } });
+      // Abrir modal para ingresar el código recibido por email
       setShowVerifyModal(true);
+    } catch (e: any) {
+      // Manejo de validación 422 y otros errores
+      if (e?.status === 422) {
+        const emailErrors = e?.body?.errors?.email as unknown;
+        if (Array.isArray(emailErrors) && emailErrors.includes('has already been taken')) {
+          setErrorMsg('Este email ya está registrado. Probá con otro o iniciá sesión.');
+        } else {
+          setErrorMsg('Validación fallida. Revisá el email e intentá de nuevo.');
+        }
+      } else {
+        const msg = e?.message || 'Ocurrió un error. Intentá nuevamente más tarde.';
+        setErrorMsg(msg);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleVerify = (code: string) => {
-    console.log('Verification code:', code);
-    setShowVerifyModal(false);
-  
-    navigation.navigate('Name');
+  const handleVerify = async (code: string) => {
+    if (loading) return;
+    setErrorMsg(null);
+    setLoading(true);
+    try {
+      const res = await confirmEmailStep2(code);
+      const rawId = (res as any)?.data?.user?.id;
+      const userId = typeof rawId === 'number' ? rawId : Number(rawId);
+      if (!Number.isFinite(userId)) {
+        setErrorMsg('No se pudo confirmar el usuario. Intentá nuevamente.');
+        return;
+      }
+      // Persistir tokens y usuario si vienen en la respuesta
+      const access = (res as any)?.data?.access_token as string | undefined;
+      const refresh = (res as any)?.data?.refresh_token as string | undefined;
+      const user = (res as any)?.data?.user as any | undefined;
+      try {
+        if (access || refresh) {
+          await useAuthStore.getState().setTokens({ accessToken: access || null, refreshToken: refresh || null });
+        }
+        if (user && typeof user === 'object') {
+          // Map mínimo al tipo AuthUser
+          const mapped = { id: user.id, email: user.email, name: user.name ?? null, role: user.role ?? null };
+          useAuthStore.getState().setCurrentUser(mapped);
+          await persistUser(mapped);
+        }
+        // Programar refresh proactivo según exp del JWT
+        scheduleProactiveRefresh();
+      } catch {}
+      setShowVerifyModal(false);
+      navigation.navigate({ name: 'Name', params: { userId } } as any);
+    } catch (e: any) {
+      const msg = e?.message as string | undefined;
+      if (msg === 'Email already confirmed') {
+        setErrorMsg('Este email ya fue confirmado. Podés continuar con el registro.');
+      } else if (e?.status === 422 || e?.status === 400) {
+        setErrorMsg('Código inválido o expirado. Revisá tu correo e intentá de nuevo.');
+      } else {
+        setErrorMsg(msg || 'No pudimos confirmar tu email. Probá más tarde.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -79,13 +144,18 @@ export const EmailScreen: React.FC = () => {
           autoCapitalize="none"
           autoCorrect={false}
         />
+
+        {errorMsg ? (
+          <BodyM className="text-red-600 mt-3 text-center">{errorMsg}</BodyM>
+        ) : null}
       </View>
 
     
       <PrimaryButton 
-        title="Continuar"
+        title={loading ? 'Enviando...' : 'Continuar'}
         variant="dark"
         onPress={handleContinue}
+        disabled={loading}
       />
 
     
@@ -95,6 +165,7 @@ export const EmailScreen: React.FC = () => {
         onClose={handleCloseModal}
         onVerify={handleVerify}
       />
+      <LoadingOverlay visible={loading} message="Procesando..." />
     </View>
   );
 };

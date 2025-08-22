@@ -1,10 +1,11 @@
 // Define navigation params
 export type RootStackParamList = {
   Auth: undefined;
+  Login: undefined;
   Email: undefined;
-  Name: undefined;
-  Password: undefined;
-  About: undefined;
+  Name: { userId: number };
+  Password: { userId: number };
+  About: { userId: number };
   SocialMedia: undefined;
   AccountCreated: undefined;
   Home: undefined;
@@ -21,4 +22,9 @@ export type RootStackParamList = {
   Paypal: undefined;
   PaymentMethods: undefined;
   MyCampaigns: undefined;
+  EditName: undefined;
+  EditEmail: undefined;
+  EditPassword: undefined;
+  EditPersonalData: { section?: 'gender' | 'birthdate' | 'location' } | undefined;
+  EditPhone: undefined;
 };

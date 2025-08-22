@@ -7,13 +7,16 @@ import {
   StatusBar, 
   ScrollView
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RouteProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
+import { setUserPasswordStep3 } from '../services/api';
+import { LoadingOverlay } from '../components';
 
 type PasswordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Password'>;
 
@@ -24,7 +27,11 @@ interface ValidationRule {
 
 export const PasswordScreen: React.FC = () => {
   const navigation = useNavigation<PasswordScreenNavigationProp>();
+  const route = useRoute<RouteProp<RootStackParamList, 'Password'>>();
+  const { userId } = route.params;
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [validations, setValidations] = useState<ValidationRule[]>([
     { text: 'Fuerza de la contraseña: aún no evaluada', isValid: false },
     { text: 'Debe tener al menos 8 caracteres', isValid: false },
@@ -73,12 +80,24 @@ export const PasswordScreen: React.FC = () => {
     setValidations(newValidations);
   }, [password]);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const allValid = validations.every(validation => validation.isValid);
     if (allValid && password.trim()) {
-      console.log('Continue with password:', password);
-    
-      navigation.navigate('About');
+      if (submitting) return;
+      setSubmitError(null);
+      setSubmitting(true);
+      try {
+        await setUserPasswordStep3(userId, { set_password: { password: password.trim() } });
+        navigation.navigate({ name: 'About', params: { userId } });
+      } catch (e: any) {
+        if (e?.status === 422) {
+          setSubmitError('Validación fallida. Revisá tu contraseña e intentá de nuevo.');
+        } else {
+          setSubmitError(e?.message || 'No pudimos guardar tu contraseña. Probá más tarde.');
+        }
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -187,11 +206,16 @@ export const PasswordScreen: React.FC = () => {
      
       <View className="px-6 pb-8 bg-white">
         <PrimaryButton 
-          title="Continuar"
+          title={submitting ? 'Guardando...' : 'Continuar'}
           variant="dark"
           onPress={handleContinue}
+          disabled={submitting}
         />
+        {submitError ? (
+          <BodyS className="text-red-600 mt-3 text-center">{submitError}</BodyS>
+        ) : null}
       </View>
+      <LoadingOverlay visible={submitting} message="Guardando contraseña..." />
     </View>
   );
 };

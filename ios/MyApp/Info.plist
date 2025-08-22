@@ -53,5 +53,14 @@
 		<string>Geist-Bold.ttf</string>
 		<string>Geist-Medium.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>disker</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

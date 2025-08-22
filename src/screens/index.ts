@@ -1,6 +1,7 @@
 
 export { AuthScreen } from './AuthScreen';
 export { EmailScreen } from './EmailScreen';
+export { LoginScreen } from './LoginScreen';
 export { NameScreen } from './NameScreen';
 export { PasswordScreen } from './PasswordScreen';
 export { AboutScreen } from './AboutScreen';
