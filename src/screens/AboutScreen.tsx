@@ -9,30 +9,59 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RouteProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../navigation';
 import { PrimaryButton, SelectionButton } from '../components/buttons';
 import { FloatingLabelInput, DateInput, SelectInput } from '../components/inputs';
 import { CountryPickerModal } from '../components/modal/CountryPickerModal';
 import { HeadingM, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyS, BodyMStrong } from '../components/typography/BodyText';
+import { setPersonalDataStep5 } from '../services/api';
+import { LoadingOverlay } from '../components';
 
 type AboutScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'About'>;
 
 export const AboutScreen: React.FC = () => {
   const navigation = useNavigation<AboutScreenNavigationProp>();
+  const route = useRoute<RouteProp<RootStackParamList, 'About'>>();
+  const { userId } = route.params;
   const [gender, setGender] = useState<'Masculino' | 'Femenino' | ''>('');
   const [birthDate, setBirthDate] = useState('');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [showCountryModal, setShowCountryModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleContinue = () => {
-    if (gender && birthDate && country && city) {
-      console.log('Continue with data:', { gender, birthDate, country, city });
-    
+  const handleContinue = async () => {
+    if (!(gender && birthDate && country && city)) return;
+    if (submitting) return;
+
+    // Map UI state to API payload
+    const apiGender = gender === 'Masculino' ? 'male' : 'female';
+    const birthApi = birthDate.replaceAll('/', '-'); // DD/MM/AAAA -> DD-MM-AAAA
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await setPersonalDataStep5(userId, {
+        set_personal_data: {
+          country,
+          city_uid: 1, // hardcoded per requirement
+          birthdate: birthApi,
+          gender: apiGender,
+        },
+      });
       navigation.navigate('SocialMedia');
+    } catch (e: any) {
+      if (e?.status === 422) {
+        setSubmitError('Validación fallida. Revisá tus datos e intentá de nuevo.');
+      } else {
+        setSubmitError(e?.message || 'No pudimos guardar tus datos. Probá más tarde.');
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -184,11 +213,14 @@ export const AboutScreen: React.FC = () => {
    
       <View className="px-6 pb-8 bg-white">
         <PrimaryButton 
-          title="Continuar"
+          title={submitting ? 'Guardando...' : 'Continuar'}
           variant="dark"
           onPress={handleContinue}
-          disabled={!isFormValid}
+          disabled={!isFormValid || submitting}
         />
+        {submitError ? (
+          <BodyS className="text-red-600 mt-3 text-center">{submitError}</BodyS>
+        ) : null}
       </View>
 
    
@@ -198,6 +230,7 @@ export const AboutScreen: React.FC = () => {
         onSelect={setCountry}
         selectedCountry={country}
       />
+      <LoadingOverlay visible={submitting} message="Guardando datos..." />
     </View>
     </KeyboardAvoidingView>
   );

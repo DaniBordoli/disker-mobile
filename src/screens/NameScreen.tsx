@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RouteProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { FloatingLabelInput } from '../components/inputs';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyMStrong, BodyS } from '../components/typography/BodyText';
+import { setUserNamesStep4 } from '../services/api';
+import { LoadingOverlay } from '../components';
 
 type NameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Name'>;
 
 export const NameScreen: React.FC = () => {
   const navigation = useNavigation<NameScreenNavigationProp>();
+  const route = useRoute<RouteProp<RootStackParamList, 'Name'>>();
+  const { userId } = route.params;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     let hasError = false;
     
     if (!firstName.trim()) {
@@ -34,9 +41,24 @@ export const NameScreen: React.FC = () => {
       setLastNameError(false);
     }
     
-    if (!hasError) {
-      console.log('Continue with name:', { firstName, lastName });
-      navigation.navigate('Password');
+    if (hasError || loading) return;
+
+    setSubmitError(null);
+    setLoading(true);
+    try {
+      console.log('[SetNames] request', { userId, name: firstName.trim(), lastname: lastName.trim() });
+      const resp = await setUserNamesStep4(userId, { set_names: { name: firstName.trim(), lastname: lastName.trim() } });
+      console.log('[SetNames] response', resp);
+      navigation.navigate({ name: 'Password', params: { userId } } as any);
+    } catch (e: any) {
+      console.log('[SetNames] error', e);
+      if (e?.status === 422) {
+        setSubmitError('Validación fallida. Revisá los datos e intentá de nuevo.');
+      } else {
+        setSubmitError(e?.message || 'Ocurrió un error. Intentá nuevamente más tarde.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,10 +148,14 @@ export const NameScreen: React.FC = () => {
 
       
       <PrimaryButton 
-        title="Continuar"
+        title={loading ? 'Guardando...' : 'Continuar'}
         variant="dark"
         onPress={handleContinue}
       />
+      {submitError ? (
+        <BodyS className="text-red-600 mt-3 text-center">{submitError}</BodyS>
+      ) : null}
+      <LoadingOverlay visible={loading} message="Guardando..." />
     </View>
   );
 };

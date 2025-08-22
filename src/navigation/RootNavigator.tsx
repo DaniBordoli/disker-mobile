@@ -1,7 +1,10 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { useAuthStore } from '../store/auth';
 import { 
   AuthScreen, 
+  LoginScreen,
   EmailScreen, 
   NameScreen, 
   PasswordScreen, 
@@ -28,6 +31,17 @@ import type { RootStackParamList } from './types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator: React.FC = () => {
+  const navigation = useNavigation<any>();
+  const accessToken = useAuthStore((s) => s.accessToken);
+
+  React.useEffect(() => {
+    if (!accessToken) {
+      try {
+        navigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
+      } catch {}
+    }
+  }, [accessToken, navigation]);
+
   return (
     <Stack.Navigator 
       initialRouteName="Auth"
@@ -37,6 +51,7 @@ export const RootNavigator: React.FC = () => {
       }}
     >
       <Stack.Screen name="Auth" component={AuthScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Email" component={EmailScreen} />
       <Stack.Screen name="Name" component={NameScreen} />
       <Stack.Screen name="Password" component={PasswordScreen} />
@@ -57,6 +72,11 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="Paypal" component={PaypalScreen} />
   <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
   <Stack.Screen name="MyCampaigns" component={MyCampaignsScreen} />
+  <Stack.Screen name="EditName" component={require('../screens/EditNameScreen').default} />
+  <Stack.Screen name="EditEmail" component={require('../screens/EditEmailScreen').default} />
+  <Stack.Screen name="EditPassword" component={require('../screens/EditPasswordScreen').default} />
+  <Stack.Screen name="EditPersonalData" component={require('../screens/EditPersonalDataScreen').default} />
+  <Stack.Screen name="EditPhone" component={require('../screens/EditPhoneScreen').default} />
     </Stack.Navigator>
   );
 };

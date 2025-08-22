@@ -74,13 +74,15 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.myapp"
+    namespace "com.disker.mobile"
     defaultConfig {
-        applicationId "com.myapp"
+        applicationId "com.disker.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // Required by react-native-app-auth to resolve ${appAuthRedirectScheme} in its manifest
+        manifestPlaceholders = [ appAuthRedirectScheme: 'disker' ]
     }
     signingConfigs {
         debug {

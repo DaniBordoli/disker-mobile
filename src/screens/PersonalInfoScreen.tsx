@@ -6,6 +6,7 @@ import type { RootStackParamList } from '../navigation';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
 import { HeadingM, HeadingS } from '../components/typography/Headings';
 import { BodyM, BodyMLink, BodyMStrong, BodyS } from '../components/typography/BodyText';
+import { useAuthStore } from '../store/auth';
 
 type PersonalInfoScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PersonalInfo'>;
 
@@ -17,11 +18,17 @@ interface PersonalInfoField {
 
 const PersonalInfoScreen: React.FC = () => {
   const navigation = useNavigation<PersonalInfoScreenNavigationProp>();
-  
+  const user = useAuthStore((s) => s.currentUser);
+  const displayName = React.useMemo(() => {
+    if (user?.name && user.name.trim().length > 0) return user.name.trim();
+    return '—';
+  }, [user]);
+  const displayEmail = user?.email || '—';
+
   const personalInfoFields: PersonalInfoField[] = [
     {
       label: 'Email',
-      value: 'Lgomez@mail.com',
+      value: displayEmail,
       type: 'text'
     },
     {
@@ -31,7 +38,7 @@ const PersonalInfoScreen: React.FC = () => {
     },
     {
       label: 'Nombre y apellido',
-      value: 'Martina Solari',
+      value: displayName,
       type: 'text'
     },
     {
@@ -67,7 +74,25 @@ const PersonalInfoScreen: React.FC = () => {
             {field.value}
           </BodyM>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (field.label === 'Nombre y apellido') {
+              navigation.navigate('EditName');
+            } else if (field.label === 'Email') {
+              navigation.navigate('EditEmail');
+            } else if (field.label === 'Contraseña') {
+              navigation.navigate('EditPassword');
+            } else if (field.label === 'Género') {
+              navigation.navigate('EditPersonalData', { section: 'gender' });
+            } else if (field.label === 'Fecha de nacimiento') {
+              navigation.navigate('EditPersonalData', { section: 'birthdate' });
+            } else if (field.label === 'Soy de') {
+              navigation.navigate('EditPersonalData', { section: 'location' });
+            } else if (field.label === 'Teléfono') {
+              navigation.navigate('EditPhone');
+            }
+          }}
+        >
           <BodyMLink className="text-black">
             Editar
           </BodyMLink>

@@ -1,15 +1,62 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
 import { PrimaryButton, SocialButton } from '../components/buttons';
 import { BodyLLink, BodyM } from '../components/typography/BodyText';
+import { signInWithGoogle } from '../services/google';
+import { loginWithGoogleSession } from '../services/api';
+import { LoadingOverlay } from '../components';
+import { loginWithTikTok } from '../services/tiktokAuth';
 
 type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Auth'>;
 
 export const AuthScreen: React.FC = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
+  const [googleLoading, setGoogleLoading] = React.useState(false);
+  const [tiktokLoading, setTiktokLoading] = React.useState(false);
+
+  const handleGoogle = React.useCallback(async () => {
+    if (googleLoading) return;
+    setGoogleLoading(true);
+    try {
+      const res = await signInWithGoogle();
+      console.log('[GoogleLogin] signIn result', res);
+      if (!res?.idToken) {
+        setGoogleLoading(false);
+        return;
+      }
+      const apiRes = await loginWithGoogleSession(res.idToken);
+      console.log('[GoogleLogin] API response', apiRes);
+      // Navigate after successful login; store listeners will also react
+      try {
+        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      } catch {}
+    } catch (e) {
+      console.log('[GoogleLogin] error', e);
+    } finally {
+      setGoogleLoading(false);
+    }
+  }, [googleLoading, navigation]);
+
+  const handleTikTok = React.useCallback(async () => {
+    if (tiktokLoading) return;
+    setTiktokLoading(true);
+    try {
+      const res = await loginWithTikTok();
+      // TODO: enviar res.accessToken (y refreshToken) a tu backend para vincular la cuenta
+      Alert.alert('TikTok', 'Sesión iniciada con TikTok correctamente.');
+      try {
+        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      } catch {}
+    } catch (e: any) {
+      const msg = e?.message || 'No se pudo completar el inicio con TikTok.';
+      Alert.alert('TikTok', msg);
+    } finally {
+      setTiktokLoading(false);
+    }
+  }, [tiktokLoading, navigation]);
 
   return (
     <View className="flex-1 bg-white px-6 pt-16 pb-8">
@@ -68,17 +115,19 @@ export const AuthScreen: React.FC = () => {
 
      
         <SocialButton 
-          title="Continuar con Tiktok"
+          title={tiktokLoading ? 'Conectando…' : 'Continuar con Tiktok'}
           provider="tiktok"
           icon={<Image source={require('../public/SignUpImages/tiktokLogo.png')} className="w-5 h-5" resizeMode="contain" />}
-          onPress={() => console.log('TikTok login')}
+          onPress={handleTikTok}
+          disabled={tiktokLoading}
         />
 
         <SocialButton 
-          title="Continuar con Google"
+          title={googleLoading ? 'Conectando…' : 'Continuar con Google'}
           provider="google"
           icon={<Image source={require('../public/SignUpImages/googleLogo.png')} className="w-5 h-5" resizeMode="contain" />}
-          onPress={() => console.log('Google login')}
+          onPress={handleGoogle}
+          disabled={googleLoading}
         />
 
         <SocialButton 
@@ -98,9 +147,9 @@ export const AuthScreen: React.FC = () => {
        
         <TouchableOpacity 
           className="items-center mt-4"
-          onPress={() => console.log('Ya tengo cuenta')}
+          onPress={() => navigation.navigate('Login')}
         >
-          <BodyLLink className="text-primary-950 font-medium text-lg underline" onPress={() => navigation.navigate('Home')}>
+          <BodyLLink className="text-primary-950 font-medium text-lg underline" onPress={() => navigation.navigate('Login')}>
             Ya tengo cuenta
           </BodyLLink>
         </TouchableOpacity>
@@ -115,6 +164,7 @@ export const AuthScreen: React.FC = () => {
           </BodyM>
         </View>
       </View>
+      <LoadingOverlay visible={googleLoading || tiktokLoading} message={googleLoading ? 'Conectando con Google...' : (tiktokLoading ? 'Conectando con TikTok...' : '')} />
     </View>
   );
 };
