@@ -9,6 +9,7 @@ export { SocialMediaScreen } from './SocialMediaScreen';
 export { AccountCreatedScreen } from './AccountCreatedScreen';
 export { default as HomeScreen } from './HomeScreen';
 export { CampaignDetailScreen } from './CampaignDetailScreen';
+export { InstagramProgressScreen } from './InstagramProgressScreen';
 
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as NotificationsScreen } from './NotificationsScreen';

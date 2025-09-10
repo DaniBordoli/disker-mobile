@@ -27,4 +27,5 @@ export type RootStackParamList = {
   EditPassword: undefined;
   EditPersonalData: { section?: 'gender' | 'birthdate' | 'location' } | undefined;
   EditPhone: undefined;
+  InstagramProgress: undefined;
 };

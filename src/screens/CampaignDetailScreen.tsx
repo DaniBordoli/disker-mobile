@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { 
   View, 
-  Text, 
   Image, 
   TouchableOpacity, 
   StatusBar, 
   ScrollView,
   SafeAreaView,
-  ImageBackground,
   Animated,
   Modal,
   KeyboardAvoidingView,
@@ -17,8 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
-import { BodyM, BodyS } from '../components/typography/BodyText';
-import { PrimaryButton } from '../components/buttons/PrimaryButton';
+import { BodyM, BodyS, BodyMLink, BodyMStrong } from '../components/typography/BodyText';
+import { ProgressTab, DescriptionTab } from '../components/campaign';
 import { CampaignData } from '../types/campaign';
 
 type CampaignDetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CampaignDetail'>;
@@ -34,6 +32,7 @@ export const CampaignDetailScreen: React.FC<CampaignDetailScreenProps> = ({
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'Progreso' | 'Descripción'>('Progreso');
 
  
   const defaultData: CampaignData = {
@@ -91,7 +90,6 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
   };
 
   const data = campaignData || defaultData;
-  const totalDeliverables = data.deliverables.reduce((sum, platform) => sum + platform.totalCount, 0);
 
   const handleScroll = (event: any) => {
     const scrollY = event.nativeEvent.contentOffset.y;
@@ -152,6 +150,7 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
        
         <View className="bg-violet-600 pb-6 relative">
@@ -193,10 +192,10 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
           )}
         </View>
 
-        
-        <View className="mt-20">
+
+        <View className="mt-20 flex-1">
          
-          <View className="bg-white rounded-t-3xl p-4" style={{ borderTopLeftRadius: 24, borderTopRightRadius: 24 }}>
+          <View className="bg-white rounded-t-3xl p-4 flex-1" style={{ borderTopLeftRadius: 24, borderTopRightRadius: 24 }}>
            
             <View className="mb-6">
             <View className="flex-row items-center justify-between mb-4">
@@ -245,153 +244,52 @@ Animate a mostrar tu mundo con las Air Max. Contá tu historia, desde lo más si
               </View>
             </View>
 
-            
-            <View className="flex-row items-center mb-2">
-              <Image 
-                source={require('../public/Icons/IconDate.png')}
-                className="w-4 h-4 mr-2"
-                resizeMode="contain"
-              />
-              <BodyS className="text-gray-600">Inicio: {data.startDate}</BodyS>
-              <View className="mx-3 w-px h-4 bg-gray-400" />
-              <Image 
-                source={require('../public/Icons/IconTicket.png')}
-                className="w-4 h-4 mr-2"
-                resizeMode="contain"
-              />
-              <BodyS className="text-gray-600">{data.campaignType}</BodyS>
+            {/* Tabs */}
+            <View className="flex-row mb-6">
+              <TouchableOpacity
+                className={`flex-1 pb-3 border-b-2 ${activeTab === 'Progreso' ? 'border-primary-950' : 'border-gray-200'} flex-row items-center justify-center`}
+                onPress={() => setActiveTab('Progreso')}
+              >
+                <Image 
+                  source={require('../public/Icons/IconSpinner.png')}
+                  className="w-4 h-4 mr-2"
+                  resizeMode="contain"
+                  style={{ tintColor: activeTab === 'Progreso' ? '#1a1a1a' : '#6b7280' }}
+                />
+                <BodyM className={`text-center font-medium ${activeTab === 'Progreso' ? 'text-primary-950' : 'text-gray-500'}`}>
+                  Progreso
+                </BodyM>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className={`flex-1 pb-3 border-b-2 ${activeTab === 'Descripción' ? 'border-primary-950' : 'border-gray-200'} flex-row items-center justify-center`}
+                onPress={() => setActiveTab('Descripción')}
+              >
+                <Image 
+                  source={require('../public/ProfileScreenIcons/IconDocument.png')}
+                  className="w-4 h-4 mr-2"
+                  resizeMode="contain"
+                  style={{ tintColor: activeTab === 'Descripción' ? '#1a1a1a' : '#6b7280' }}
+                />
+                <BodyM className={`text-center font-medium ${activeTab === 'Descripción' ? 'text-primary-950' : 'text-gray-500'}`}>
+                  Descripción
+                </BodyM>
+              </TouchableOpacity>
             </View>
 
-            <View className="flex-row items-center mb-4">
-              <Image 
-                source={require('../public/Icons/IconPin.png')}
-                className="w-4 h-4 mr-2"
-                resizeMode="contain"
+            {/* Contenido según tab activo */}
+            {activeTab === 'Progreso' ? (
+              <ProgressTab />
+            ) : (
+              <DescriptionTab 
+                data={data} 
+                onShowProjectModal={() => setShowProjectModal(true)} 
               />
-              <BodyS className="text-gray-600">{data.location}</BodyS>
-            </View>
-
-           
-            <View className="h-px bg-primary-200 mb-6" />
-
-           
-            <HeadingS className="text-primary-950 mb-3">Acerca del proyecto</HeadingS>
-            <BodyM className="text-primary-950 leading-6 mb-4">
-              {data.aboutProject.summary}
-            </BodyM>
-            
-            <View className="items-center">
-              <PrimaryButton 
-                title="Mostrar más" 
-                variant="outline"
-                onPress={() => setShowProjectModal(true)}
-              />
-            </View>
-
-           
-            <View className="h-px bg-primary-200 mt-6" />
+            )}
           </View>
-
-         
-            <View > 
-          <View className="mb-6">
-            <HeadingS className="text-primary-950 mb-4">Entregables ({totalDeliverables})</HeadingS>
-            
-            {data.deliverables.map((platform, index) => (
-              <View key={platform.platform} className="mb-4 bg-primary-50 rounded-lg p-3">
-                <View className="flex-row items-center mb-3">
-                  <View 
-                    className="w-8 h-8 rounded-full items-center justify-center mr-3"
-                    style={{ backgroundColor: platform.backgroundColor }}
-                  >
-                    <Image
-                      source={platform.icon}
-                      className="w-5 h-5"
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <BodyM className="text-primary-950 font-medium">
-                    {platform.platform === 'instagram' ? 'Instagram' : 'TikTok'}{' '}
-                  </BodyM>
-                  <BodyS className="text-primary-400 text-sm">{platform.totalCount} entregables</BodyS>
-                </View>
-                
-                <View className="flex-row items-center ml-9 flex-wrap">
-                  {platform.items.map((item, itemIndex) => (
-                    <React.Fragment key={itemIndex}>
-                      <View className="flex-row items-center">
-                        <Text className="mr-1">{item.emoji}</Text>
-                        <BodyS className="text-primary-950 text-sm">{item.text}</BodyS>
-                      </View>
-                      {itemIndex < platform.items.length - 1 && (
-                        <View className="w-2 h-2 bg-primary-100 rounded-full mx-3" />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </View>
-              </View>
-            ))}
-
-          
-            <View className="mb-6">
-              <HeadingS className="text-primary-950 mb-4">Requisitos</HeadingS>
-              <View className="space-y-2">
-                {data.requirements.map((requirement, index) => (
-                  <View key={index} className="flex-row items-start">
-                    <Text className="text-primary-950 text-2xl mr-2">•</Text>
-                    <BodyM className="text-primary-950 flex-1">{requirement}</BodyM>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-           
-            <View className="h-px bg-primary-200 mb-6" />
-
-            
-            <View className="mb-6">
-              <HeadingS className="text-primary-950 mb-4">Términos y condiciones</HeadingS>
-              <BodyM className="text-primary-950 leading-5">
-                {data.termsAndConditions}
-              </BodyM>
-            </View>
-
-           
-            <View className="h-px bg-primary-200 mb-6" />
-
-         
-            <View>
-              <HeadingS className="text-primary-950 mb-4">Categorías</HeadingS>
-              <View className="flex-row flex-wrap">
-                {data.categories.map((category, index) => (
-                  <View key={index} className="bg-primary-100 px-3 py-2 rounded-full mr-2 mb-2">
-                    <BodyS className="text-primary-950">{category}</BodyS>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </View>
-        </View>
         </View>
         </View>
       </ScrollView>
 
-      
-      <View className="bg-white border-t border-gray-200 px-4 py-4">
-        <View className="flex-row items-center justify-between">
-          <HeadingM className="text-primary-950">${data.price} {data.currency}</HeadingM>
-          
-          <View style={{ width: '65%' }}>
-            <PrimaryButton 
-              title="Postularme" 
-              variant="dark"
-              onPress={() => navigation.navigate('CampaignIdeaScreen')}
-            />
-          </View>
-        </View>
-      </View>
-
-      
       <Modal
         visible={showProjectModal}
         transparent
