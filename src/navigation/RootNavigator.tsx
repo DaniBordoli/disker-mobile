@@ -26,6 +26,7 @@ import MessageDetailScreen from '../screens/MessageDetailScreen';
 import PaypalScreen from '../screens/PaypalScreen';
 import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
 import MyCampaignsScreen from '../screens/MyCampaignsScreen';
+import { InstagramProgressScreen } from '../screens/InstagramProgressScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -72,6 +73,7 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="Paypal" component={PaypalScreen} />
   <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
   <Stack.Screen name="MyCampaigns" component={MyCampaignsScreen} />
+  <Stack.Screen name="InstagramProgress" component={InstagramProgressScreen} />
   <Stack.Screen name="EditName" component={require('../screens/EditNameScreen').default} />
   <Stack.Screen name="EditEmail" component={require('../screens/EditEmailScreen').default} />
   <Stack.Screen name="EditPassword" component={require('../screens/EditPasswordScreen').default} />
