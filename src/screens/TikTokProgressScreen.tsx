@@ -25,10 +25,10 @@ import {
   CompletedSection
 } from '../components/instagram';
 
-type InstagramProgressScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'InstagramProgress'>;
+type TikTokProgressScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'TikTokProgress'>;
 
-export const InstagramProgressScreen: React.FC = () => {
-  const navigation = useNavigation<InstagramProgressScreenNavigationProp>();
+export const TikTokProgressScreen: React.FC = () => {
+  const navigation = useNavigation<TikTokProgressScreenNavigationProp>();
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [videoHDUploaded, setVideoHDUploaded] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
@@ -37,15 +37,15 @@ export const InstagramProgressScreen: React.FC = () => {
   const [metricsFile, setMetricsFile] = useState<AudienceStatsFile | null>(null);
   const fadeAnim = useState(new Animated.Value(0))[0];
 
-
+  // Estados de cada sección
   const [scriptStatus] = useState<ProgressStatus>('approved');
-  const [hasScript, setHasScript] = useState(false); 
+  const [hasScript, setHasScript] = useState(false); // Cambiar a estado modificable para mostrar funcionalidad
   const [videoStatus] = useState<ProgressStatus>('approved');
   const [videoHDStatus, setVideoHDStatus] = useState<ProgressStatus>('pending');
   const [linkStatus, setLinkStatus] = useState<ProgressStatus>('pending');
   const [metricsStatus, setMetricsStatus] = useState<ProgressStatus>('pending');
 
- 
+  // Verificar si todas las secciones están aprobadas
   const allApproved = scriptStatus === 'approved' && 
                      videoStatus === 'approved' && 
                      videoHDStatus === 'approved' && 
@@ -126,8 +126,8 @@ export const InstagramProgressScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: '#99003F' }}>
-      <StatusBar barStyle="light-content" backgroundColor="#99003F" />
+    <SafeAreaView className="flex-1" style={{ backgroundColor: '#000000' }}>
+      <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       {/* Sticky Header */}
       <Animated.View 
@@ -150,7 +150,7 @@ export const InstagramProgressScreen: React.FC = () => {
           </TouchableOpacity>
           
           <View className="flex-1 mx-4 items-center">
-            <HeadingS className="text-primary-950">Reel 1</HeadingS>
+            <HeadingS className="text-primary-950">Video 1</HeadingS>
             <BodyS className="text-gray-500">Vence en 15 días</BodyS>
           </View>
           
@@ -172,7 +172,7 @@ export const InstagramProgressScreen: React.FC = () => {
         contentContainerStyle={{ flexGrow: 1 }}
       >
         {/* Header Section */}
-        <View className="pb-6 relative" style={{ backgroundColor: '#99003F' }}>
+        <View className="pb-6 relative" style={{ backgroundColor: '#000000' }}>
           {/* Navigation */}
           <View className="flex-row justify-between items-center px-4 pt-4 pb-6">
             <TouchableOpacity 
@@ -188,7 +188,7 @@ export const InstagramProgressScreen: React.FC = () => {
           </View>
         </View>
 
-       
+        {/* TikTok Icon */}
         <View 
           style={{ 
             position: 'absolute',
@@ -199,15 +199,14 @@ export const InstagramProgressScreen: React.FC = () => {
             elevation: 10 
           }}
         >
-       
           <View 
             className="w-16 h-16 rounded-full items-center justify-center border-2 border-white"
             style={{ 
-              backgroundColor: '#FF0069'
+              backgroundColor: '#000000'
             }}
           >
             <Image
-              source={require('../public/Icons/InstagramRoundedColorless.png')}
+              source={require('../public/Icons/TiktokRounded.png')}
               className="w-10 h-10"
               resizeMode="contain"
             />
@@ -216,18 +215,16 @@ export const InstagramProgressScreen: React.FC = () => {
 
         {/* Content Section */}
         <View className="flex-1">
-
- 
           <View className="bg-white rounded-t-3xl p-4 flex-1" style={{ borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingTop: 40 }}>
             {/* Title - Centrado debajo del icono */}
             <View className="items-center mb-6">
-              <HeadingS className="text-primary-950 mb-1">Reel 1</HeadingS>
+              <HeadingS className="text-primary-950 mb-1">Video 1</HeadingS>
               <BodyS className="text-gray-500">Vence en 15 días</BodyS>
             </View>
 
-   
+            {/* Secciones con línea vertical conectora */}
             <View className="relative">
-        
+              {/* Línea vertical conectora */}
               <View 
                 className="absolute left-1/2 bg-gray-200"
                 style={{
@@ -238,7 +235,6 @@ export const InstagramProgressScreen: React.FC = () => {
                 }}
               />
 
-         
               {/* Secciones */}
               <ScriptSection 
                 status={scriptStatus} 
@@ -270,8 +266,6 @@ export const InstagramProgressScreen: React.FC = () => {
               />
 
               {allApproved && <CompletedSection />}
-
-          
             </View>
           </View>
         </View>

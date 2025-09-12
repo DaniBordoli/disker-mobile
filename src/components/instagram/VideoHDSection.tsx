@@ -1,17 +1,21 @@
 import React from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { BodyMStrong, BodyS, BodyMLink, BodyM } from '../typography/BodyText';
+import { StatusBadge } from './StatusBadge';
+import { ProgressStatus } from '../../types/progressStatus';
 
 interface VideoHDSectionProps {
   videoHDUploaded: boolean;
   onUpload: () => void;
   onRemove: () => void;
+  status?: ProgressStatus;
 }
 
 export const VideoHDSection: React.FC<VideoHDSectionProps> = ({ 
   videoHDUploaded, 
   onUpload, 
-  onRemove 
+  onRemove,
+  status = 'approved'
 }) => {
   return (
     <View className="mb-6">
@@ -38,9 +42,7 @@ export const VideoHDSection: React.FC<VideoHDSectionProps> = ({
         <View className="border border-gray-200 rounded-lg p-4 bg-white">
           <View className="flex-row items-start justify-between mb-3">
             <BodyMStrong className="text-primary-950">Video en HD</BodyMStrong>
-            <View className="bg-green-100 px-3 py-1 rounded-lg">
-              <BodyS className="text-green-800 font-medium">Subido</BodyS>
-            </View>
+            <StatusBadge status={status} />
           </View>
           
        

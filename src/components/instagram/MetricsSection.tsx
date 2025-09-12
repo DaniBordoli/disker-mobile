@@ -1,29 +1,30 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
-import { BodyMStrong, BodyS, BodyMLink } from '../typography/BodyText';
+import { BodyMStrong, BodyMLink } from '../typography/BodyText';
+import { StatusBadge } from './StatusBadge';
 import { AudienceStatsFile } from '../../types/audienceStats';
+import { ProgressStatus } from '../../types/progressStatus';
 
 interface MetricsSectionProps {
   metricsFile: AudienceStatsFile | null;
   onUpload: () => void;
   onRemove: () => void;
+  status?: ProgressStatus;
 }
 
 export const MetricsSection: React.FC<MetricsSectionProps> = ({ 
   metricsFile, 
   onUpload, 
-  onRemove 
+  onRemove,
+  status = 'pending'
 }) => {
   return (
     <View className="mb-6">
       {!metricsFile ? (
-      
         <View className="border border-gray-200 rounded-lg p-4 bg-white">
           <View className="flex-row items-start justify-between mb-3">
             <BodyMStrong className="text-primary-950">Métricas</BodyMStrong>
-            <View className="bg-purple-100 px-3 py-1 rounded-lg">
-              <BodyS className="text-purple-800 font-medium">Pendiente de aprobación</BodyS>
-            </View>
+            <StatusBadge status={status} />
           </View>
           <TouchableOpacity onPress={onUpload}>
             <BodyMLink className="text-primary-950">Subir métricas</BodyMLink>
@@ -34,9 +35,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
         <View className="border border-gray-200 rounded-lg p-4 bg-white">
           <View className="flex-row items-start justify-between mb-3">
             <BodyMStrong className="text-primary-950">Métricas</BodyMStrong>
-            <View className="bg-purple-100 px-3 py-1 rounded-lg">
-              <BodyS className="text-purple-800 font-medium">Pendiente de aprobación</BodyS>
-            </View>
+            <StatusBadge status={status} />
           </View>
           
        

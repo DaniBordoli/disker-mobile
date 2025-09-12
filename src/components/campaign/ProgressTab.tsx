@@ -96,7 +96,8 @@ export const ProgressTab: React.FC = () => {
             <View className="h-1 bg-violet-100 rounded-full ml-1" style={{ width: 62 }} />
           </View>
           
-          <BodyMLink className="text-primary-950">Completar contenido</BodyMLink>
+          <BodyMLink className="text-primary-950" onPress={() => navigation.navigate('TikTokProgress')}>
+            Completar contenido</BodyMLink>
         </View>
 
         {/* Finalizado */}

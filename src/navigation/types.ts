@@ -28,4 +28,10 @@ export type RootStackParamList = {
   EditPersonalData: { section?: 'gender' | 'birthdate' | 'location' } | undefined;
   EditPhone: undefined;
   InstagramProgress: undefined;
+  TikTokProgress: undefined;
+  ScriptHistory: undefined;
+  RejectedProposal: undefined;
+  PendingProposal: undefined;
+  ApprovedProposal: undefined;
+  AddScript: { onScriptSubmitted?: () => void } | undefined;
 };
