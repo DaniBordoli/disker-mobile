@@ -14,7 +14,12 @@ import {
   HomeScreen, 
   CampaignDetailScreen, 
   ProfileScreen, 
-  AddPaymentMethodScreen 
+  AddPaymentMethodScreen,
+  ScriptHistoryScreen,
+  RejectedProposalScreen,
+  PendingProposalScreen,
+  ApprovedProposalScreen,
+  AddScriptScreen
 } from '../screens';
 import { AudienceStatsScreen } from '../screens/AudienceStatsScreen';
 import { CampaignIdeaScreen } from '../screens/CampaignIdeaScreen';
@@ -27,6 +32,7 @@ import PaypalScreen from '../screens/PaypalScreen';
 import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
 import MyCampaignsScreen from '../screens/MyCampaignsScreen';
 import { InstagramProgressScreen } from '../screens/InstagramProgressScreen';
+import { TikTokProgressScreen } from '../screens/TikTokProgressScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -74,6 +80,12 @@ export const RootNavigator: React.FC = () => {
   <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
   <Stack.Screen name="MyCampaigns" component={MyCampaignsScreen} />
   <Stack.Screen name="InstagramProgress" component={InstagramProgressScreen} />
+  <Stack.Screen name="TikTokProgress" component={TikTokProgressScreen} />
+  <Stack.Screen name="ScriptHistory" component={ScriptHistoryScreen} />
+  <Stack.Screen name="RejectedProposal" component={RejectedProposalScreen} />
+  <Stack.Screen name="PendingProposal" component={PendingProposalScreen} />
+  <Stack.Screen name="ApprovedProposal" component={ApprovedProposalScreen} />
+  <Stack.Screen name="AddScript" component={AddScriptScreen} />
   <Stack.Screen name="EditName" component={require('../screens/EditNameScreen').default} />
   <Stack.Screen name="EditEmail" component={require('../screens/EditEmailScreen').default} />
   <Stack.Screen name="EditPassword" component={require('../screens/EditPasswordScreen').default} />

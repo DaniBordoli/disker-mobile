@@ -10,6 +10,12 @@ export { AccountCreatedScreen } from './AccountCreatedScreen';
 export { default as HomeScreen } from './HomeScreen';
 export { CampaignDetailScreen } from './CampaignDetailScreen';
 export { InstagramProgressScreen } from './InstagramProgressScreen';
+export { TikTokProgressScreen } from './TikTokProgressScreen';
+export { ScriptHistoryScreen } from './ScriptHistoryScreen';
+export { RejectedProposalScreen } from './RejectedProposalScreen';
+export { PendingProposalScreen } from './PendingProposalScreen';
+export { ApprovedProposalScreen } from './ApprovedProposalScreen';
+export { AddScriptScreen } from './AddScriptScreen';
 
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as NotificationsScreen } from './NotificationsScreen';

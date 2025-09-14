@@ -4,3 +4,5 @@ export { VideoHDSection } from './VideoHDSection';
 export { LinkSection } from './LinkSection';
 export { MetricsSection } from './MetricsSection';
 export { LinkUploadModal } from './LinkUploadModal';
+export { StatusBadge } from './StatusBadge';
+export { CompletedSection } from './CompletedSection';

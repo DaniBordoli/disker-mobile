@@ -1,19 +1,24 @@
 import React from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
-import { BodyMStrong, BodyS, BodyMLink, BodyM } from '../typography/BodyText';
+import { BodyMStrong, BodyMLink, BodyM, BodyS } from '../typography/BodyText';
+import { StatusBadge } from './StatusBadge';
+import { ProgressStatus } from '../../types/progressStatus';
 
-export const VideoSection: React.FC = () => {
+interface VideoSectionProps {
+  status?: ProgressStatus;
+}
+
+export const VideoSection: React.FC<VideoSectionProps> = ({ 
+  status = 'approved' 
+}) => {
   return (
     <View className="mb-6">
       <View className="border border-gray-200 rounded-lg p-4 bg-white">
         <View className="flex-row items-start justify-between mb-3">
           <BodyMStrong className="text-primary-950">Video</BodyMStrong>
-          <View className="bg-green-100 px-3 py-1 rounded-lg">
-            <BodyS className="text-green-800 font-medium">Aprobado</BodyS>
-          </View>
+          <StatusBadge status={status} />
         </View>
         
-       
         <View className="flex-row items-center mb-3 bg-gray-100 rounded-lg p-3">
           <View className="w-12 h-12 bg-gray-300 rounded mr-3 items-center justify-center">
             <Image 
