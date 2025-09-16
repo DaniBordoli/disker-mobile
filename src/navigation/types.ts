@@ -34,4 +34,5 @@ export type RootStackParamList = {
   PendingProposal: undefined;
   ApprovedProposal: undefined;
   AddScript: { onScriptSubmitted?: () => void } | undefined;
+  ProposalDetails: undefined;
 };

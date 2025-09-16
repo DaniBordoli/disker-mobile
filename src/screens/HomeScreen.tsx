@@ -110,8 +110,8 @@ const HomeScreen: React.FC = () => {
               key={index}
               {...campaign}
               onPress={() => {
-                console.log('Navegando a CampaignDetail desde HomeScreen');
-                navigation.navigate('CampaignDetail');
+                console.log('Navegando a ProposalDetails desde HomeScreen');
+                navigation.navigate('ProposalDetails');
               }}
               onActionPress={() => {
                 console.log('Action presionado en campaña:', campaign.title);

@@ -19,7 +19,8 @@ import {
   RejectedProposalScreen,
   PendingProposalScreen,
   ApprovedProposalScreen,
-  AddScriptScreen
+  AddScriptScreen,
+  ProposalDetailsScreen
 } from '../screens';
 import { AudienceStatsScreen } from '../screens/AudienceStatsScreen';
 import { CampaignIdeaScreen } from '../screens/CampaignIdeaScreen';
@@ -86,6 +87,7 @@ export const RootNavigator: React.FC = () => {
   <Stack.Screen name="PendingProposal" component={PendingProposalScreen} />
   <Stack.Screen name="ApprovedProposal" component={ApprovedProposalScreen} />
   <Stack.Screen name="AddScript" component={AddScriptScreen} />
+  <Stack.Screen name="ProposalDetails" component={ProposalDetailsScreen} />
   <Stack.Screen name="EditName" component={require('../screens/EditNameScreen').default} />
   <Stack.Screen name="EditEmail" component={require('../screens/EditEmailScreen').default} />
   <Stack.Screen name="EditPassword" component={require('../screens/EditPasswordScreen').default} />

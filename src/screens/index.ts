@@ -16,6 +16,7 @@ export { RejectedProposalScreen } from './RejectedProposalScreen';
 export { PendingProposalScreen } from './PendingProposalScreen';
 export { ApprovedProposalScreen } from './ApprovedProposalScreen';
 export { AddScriptScreen } from './AddScriptScreen';
+export { ProposalDetailsScreen } from './ProposalDetailsScreen';
 
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as NotificationsScreen } from './NotificationsScreen';
