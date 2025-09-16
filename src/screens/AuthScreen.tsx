@@ -8,14 +8,14 @@ import { BodyLLink, BodyM } from '../components/typography/BodyText';
 import { signInWithGoogle } from '../services/google';
 import { loginWithGoogleSession } from '../services/api';
 import { LoadingOverlay } from '../components';
-import { loginWithTikTok } from '../services/tiktokAuth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useAuthStore } from '../store/auth';
 
 type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Auth'>;
 
 export const AuthScreen: React.FC = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
   const [googleLoading, setGoogleLoading] = React.useState(false);
-  const [tiktokLoading, setTiktokLoading] = React.useState(false);
 
   const handleGoogle = React.useCallback(async () => {
     if (googleLoading) return;
@@ -40,23 +40,41 @@ export const AuthScreen: React.FC = () => {
     }
   }, [googleLoading, navigation]);
 
-  const handleTikTok = React.useCallback(async () => {
-    if (tiktokLoading) return;
-    setTiktokLoading(true);
+  
+
+  const handleGoogleDisconnect = React.useCallback(async () => {
+    // eslint-disable-next-line no-console
+    console.log('[GoogleLogin] disconnect: start');
     try {
-      const res = await loginWithTikTok();
-      // TODO: enviar res.accessToken (y refreshToken) a tu backend para vincular la cuenta
-      Alert.alert('TikTok', 'Sesión iniciada con TikTok correctamente.');
-      try {
-        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
-      } catch {}
-    } catch (e: any) {
-      const msg = e?.message || 'No se pudo completar el inicio con TikTok.';
-      Alert.alert('TikTok', msg);
-    } finally {
-      setTiktokLoading(false);
+      await GoogleSignin.revokeAccess();
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] revokeAccess: ok');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] revokeAccess: failed', e);
     }
-  }, [tiktokLoading, navigation]);
+    try {
+      await GoogleSignin.signOut();
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] signOut: ok');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] signOut: failed', e);
+    }
+    try {
+      await useAuthStore.getState().clearSession();
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] local session cleared');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('[GoogleLogin] local session clear failed', e);
+    }
+    try {
+      Alert.alert('Google', 'Se desconectó la cuenta. Vuelve a iniciar sesión para elegir otra.');
+    } catch {}
+    // eslint-disable-next-line no-console
+    console.log('[GoogleLogin] disconnect: done');
+  }, []);
 
   return (
     <View className="flex-1 bg-white px-6 pt-16 pb-8">
@@ -114,13 +132,7 @@ export const AuthScreen: React.FC = () => {
         />
 
      
-        <SocialButton 
-          title={tiktokLoading ? 'Conectando…' : 'Continuar con Tiktok'}
-          provider="tiktok"
-          icon={<Image source={require('../public/SignUpImages/tiktokLogo.png')} className="w-5 h-5" resizeMode="contain" />}
-          onPress={handleTikTok}
-          disabled={tiktokLoading}
-        />
+        
 
         <SocialButton 
           title={googleLoading ? 'Conectando…' : 'Continuar con Google'}
@@ -129,6 +141,13 @@ export const AuthScreen: React.FC = () => {
           onPress={handleGoogle}
           disabled={googleLoading}
         />
+
+        <TouchableOpacity
+          className="items-center mt-2"
+          onPress={handleGoogleDisconnect}
+        >
+          <BodyLLink className="text-primary-950 underline">Desconectar Google (cambiar de cuenta)</BodyLLink>
+        </TouchableOpacity>
 
         <SocialButton 
           title="Continuar con Instagram"
@@ -164,7 +183,7 @@ export const AuthScreen: React.FC = () => {
           </BodyM>
         </View>
       </View>
-      <LoadingOverlay visible={googleLoading || tiktokLoading} message={googleLoading ? 'Conectando con Google...' : (tiktokLoading ? 'Conectando con TikTok...' : '')} />
+      <LoadingOverlay visible={googleLoading} message={googleLoading ? 'Conectando con Google...' : ''} />
     </View>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuthStore } from '../store/auth';
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +9,8 @@ import { HeadingM, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyMLink } from '../components/typography/BodyText';
 import { PrimaryButton } from '../components/buttons/PrimaryButton';
 import { HeadingS } from '../components/typography/Headings';
+import { loginWithTikTokNative } from '../services/tiktokNative';
+import { exchangeTikTokAuthCode } from '../services/api';
 
 type SocialMediaProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SocialMediaProfile'>;
 
@@ -55,7 +58,40 @@ const SocialMediaProfileScreen: React.FC = () => {
   const [platformToDelete, setPlatformToDelete] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
 
-  const addPlatform = (platformId: string) => {
+  const addPlatform = async (platformId: string) => {
+    if (platformId === 'tiktok') {
+      try {
+        console.log('[TikTokSDK][Profile] User tapped TikTok. Starting native login...');
+        // Debug: log current access token
+        try {
+          const token = useAuthStore.getState().accessToken;
+          console.log('[Auth][Profile] accessToken:', token);
+        } catch (e) {
+          console.log('[Auth][Profile] failed to read accessToken', e);
+        }
+        const requestedScopes = ['user.info.basic', 'user.info.profile', 'video.list'] as const;
+        const res = await loginWithTikTokNative([...requestedScopes]);
+        console.log('[TikTokSDK][Profile] Native login result:', res);
+        const code = res?.authCode;
+        if (!code) {
+          console.log('[TikTokSDK][Profile] No authCode received');
+          return;
+        }
+        const granted = Array.isArray((res as any)?.grantedPermissions)
+          ? ((res as any)?.grantedPermissions as string[])
+          : [...requestedScopes];
+        console.log('[TikTokSDK][Profile] Exchanging code with backend. grantedPermissions:', granted);
+        await exchangeTikTokAuthCode(String(code), res?.codeVerifier, granted);
+        console.log('[TikTokSDK][Profile] Exchange success. Marking TikTok as linked.');
+        if (!linkedPlatforms.includes('tiktok')) {
+          setLinkedPlatforms([...linkedPlatforms, 'tiktok']);
+        }
+      } catch (e) {
+        console.log('[TikTokSDK][Profile] login error', e);
+      }
+      return;
+    }
+    // default behavior for other platforms (demo)
     if (!linkedPlatforms.includes(platformId)) {
       setLinkedPlatforms([...linkedPlatforms, platformId]);
     }

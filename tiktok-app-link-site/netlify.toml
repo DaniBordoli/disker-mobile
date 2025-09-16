@@ -1,0 +1,11 @@
+[build]
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Ensure the well-known path is served as-is
+[[headers]]
+  for = "/.well-known/*"
+  [headers.values]
+    Content-Type = "application/json"
