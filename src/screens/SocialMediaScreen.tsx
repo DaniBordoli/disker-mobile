@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuthStore } from '../store/auth';
 import { 
   View, 
   Text, 
@@ -9,12 +10,14 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/buttons';
 import { HeadingM } from '../components/typography/Headings';
 import { BodyM, BodyMStrong } from '../components/typography/BodyText';
+import { getLinkedAccounts, exchangeTikTokAuthCode } from '../services/api';
+import { loginWithTikTokNative } from '../services/tiktokNative';
 
 type SocialMediaScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SocialMedia'>;
 
@@ -56,6 +59,63 @@ export const SocialMediaScreen: React.FC = () => {
           : platform
       )
     );
+  };
+
+  // Refresh linked accounts when screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      let active = true;
+      (async () => {
+        try {
+          const accounts = await getLinkedAccounts();
+          if (!active) return;
+          const hasTikTok = accounts.some((a) => String(a.platform).toLowerCase() === 'tiktok');
+          if (hasTikTok) {
+            setSocialPlatforms((prev) => prev.map((p) => p.id === 'tiktok' ? { ...p, selected: true } : p));
+          }
+        } catch {}
+      })();
+      return () => { active = false; };
+    }, [])
+  );
+
+  const handleSelect = async (platformId: string) => {
+    if (platformId === 'tiktok') {
+      try {
+        console.log('[TikTokSDK] User tapped TikTok. Starting native login...');
+        // Debug: log current access token
+        try {
+          const token = useAuthStore.getState().accessToken;
+          console.log('[Auth] accessToken:', token);
+        } catch (e) {
+          console.log('[Auth] failed to read accessToken', e);
+        }
+        const requestedScopes = ['user.info.basic', 'user.info.profile', 'video.list'] as const;
+        const res = await loginWithTikTokNative([...requestedScopes]);
+        console.log('[TikTokSDK] Native login result:', res);
+        const code = res?.authCode;
+        if (!code) {
+          console.log('[TikTokSDK] No authCode received');
+          return;
+        }
+        const granted = Array.isArray((res as any)?.grantedPermissions)
+          ? ((res as any)?.grantedPermissions as string[])
+          : [...requestedScopes];
+        console.log('[TikTokSDK] Exchanging code with backend. grantedPermissions:', granted);
+        await exchangeTikTokAuthCode(String(code), res?.codeVerifier, granted);
+        console.log('[TikTokSDK] Exchange success. Refreshing linked accounts...');
+        const accounts = await getLinkedAccounts();
+        const hasTikTok = accounts.some((a) => String(a.platform).toLowerCase() === 'tiktok');
+        if (hasTikTok) {
+          setSocialPlatforms((prev) => prev.map((p) => p.id === 'tiktok' ? { ...p, selected: true } : p));
+          console.log('[TikTokSDK] TikTok linked and UI updated.');
+        }
+      } catch (e) {
+        console.log('[TikTokSDK] login error', e);
+      }
+      return;
+    }
+    togglePlatform(platformId);
   };
 
   const handleContinue = () => {
@@ -127,7 +187,7 @@ export const SocialMediaScreen: React.FC = () => {
               <TouchableOpacity
                 key={platform.id}
                 className="w-28 h-24 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
-                onPress={() => togglePlatform(platform.id)}
+                onPress={() => handleSelect(platform.id)}
               >
                 <Image
                   source={platform.logo}

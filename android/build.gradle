@@ -19,3 +19,12 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+// Repositories for resolving TikTok Open SDK artifacts
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://artifact.bytedance.com/repository/AwemeOpenSDK" }
+    }
+}

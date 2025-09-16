@@ -27,6 +27,32 @@ function devLog(...args: any[]) {
   }
 }
 
+// Exchange TikTok auth code (from native SDK) and link account to current user
+export async function exchangeTikTokAuthCode(
+  authCode: string,
+  codeVerifier?: string,
+  scopes?: string[]
+): Promise<{ linked: boolean }>{
+  // Backend expects GET with query params: auth_code, state, scope
+  // Avoid URLSearchParams in RN; build query manually
+  const qp: string[] = [];
+  qp.push(`code=${encodeURIComponent(authCode)}`);
+  if (codeVerifier) qp.push(`state=${encodeURIComponent(codeVerifier)}`);
+  if (scopes && scopes.length > 0) qp.push(`scope=${encodeURIComponent(scopes.join(','))}`);
+  const url = buildUrl(`/api/v1/talents/tiktok_oauth/callback?${qp.join('&')}`);
+  const resp = await fetchWithAuthRetry(url, {
+    method: 'GET',
+    headers: { ...defaultHeaders },
+  });
+
+  const data = await parseJson<ApiResponse<any>>(resp);
+  if (!resp.ok) {
+    const message = (data as any)?.meta?.message || `Request failed with status ${resp.status}`;
+    throw new ApiError(message, resp.status, data);
+  }
+  return { linked: true };
+}
+
 async function fetchWithTimeout(resource: string, options: RequestInit = {}, timeout = DEFAULT_TIMEOUT_MS): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -385,4 +411,58 @@ export async function setPersonalDataStep5(
   }
 
   return data as SetPersonalDataResponse;
+}
+
+// ---- TikTok linking ----
+export type LinkedAccount = {
+  id: string | number;
+  platform: 'tiktok' | 'instagram' | 'youtube' | string;
+  username?: string | null;
+};
+
+type StartTikTokConnectResponse = { auth_url: string };
+
+// Initiate TikTok connect flow. Adjust path to your backend if different.
+export async function startTikTokConnect(): Promise<StartTikTokConnectResponse> {
+  const url = buildUrl('/api/v1/social/tiktok/connect');
+  const resp = await fetchWithAuthRetry(url, {
+    method: 'POST',
+    headers: { ...defaultHeaders },
+    body: JSON.stringify({}),
+  });
+
+  const data = await parseJson<ApiResponse<any>>(resp);
+  if (!resp.ok) {
+    const message = (data as any)?.meta?.message || `Request failed with status ${resp.status}`;
+    throw new ApiError(message, resp.status, data);
+  }
+
+  const auth_url: string | undefined = (data as any)?.data?.auth_url || (data as any)?.auth_url;
+  if (!auth_url) {
+    throw new ApiError('Backend did not return auth_url', 500, data);
+  }
+  return { auth_url };
+}
+
+// Fetch linked social accounts. Adjust path/shape to your backend.
+export async function getLinkedAccounts(): Promise<LinkedAccount[]> {
+  const url = buildUrl('/api/v1/social/accounts');
+  const resp = await fetchWithAuthRetry(url, {
+    method: 'GET',
+    headers: { ...defaultHeaders },
+  });
+
+  const data = await parseJson<ApiResponse<any>>(resp);
+  if (!resp.ok) {
+    const message = (data as any)?.meta?.message || `Request failed with status ${resp.status}`;
+    throw new ApiError(message, resp.status, data);
+  }
+
+  const list: any[] = (data as any)?.data || (Array.isArray(data) ? (data as any) : []);
+  // Normalize minimal fields
+  return (Array.isArray(list) ? list : []).map((it) => ({
+    id: it.id ?? it.account_id ?? String(Math.random()),
+    platform: it.platform ?? it.provider ?? 'tiktok',
+    username: it.username ?? it.handle ?? null,
+  })) as LinkedAccount[];
 }

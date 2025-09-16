@@ -7,6 +7,7 @@ import { BottomNavBar } from '../components/navigation/BottomNavBar';
 import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings';
 import { BodyM, BodyMLink, BodyS } from '../components/typography/BodyText';
 import { useAuthStore } from '../store/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
@@ -135,7 +136,35 @@ const ProfileScreen: React.FC = () => {
             className="mb-8"
             onPress={async () => {
               try {
+                // eslint-disable-next-line no-console
+                console.log('[Profile] logout: start');
+                try {
+                  await GoogleSignin.revokeAccess();
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] Google revokeAccess: ok');
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] Google revokeAccess: failed', e);
+                }
+                try {
+                  await GoogleSignin.signOut();
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] Google signOut: ok');
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] Google signOut: failed', e);
+                }
                 await clearSession();
+                // eslint-disable-next-line no-console
+                console.log('[Profile] local session cleared');
+                try {
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] navigating to Auth');
+                  navigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.log('[Profile] navigation reset failed', e);
+                }
               } catch {}
             }}
           >

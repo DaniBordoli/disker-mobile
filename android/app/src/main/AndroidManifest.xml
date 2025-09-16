@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <queries>
+        <!-- TikTok Global -->
+        <package android:name="com.zhiliaoapp.musically" />
+        <!-- TikTok alternative package in some regions -->
+        <package android:name="com.ss.android.ugc.trill" />
+    </queries>
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -20,11 +27,24 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-        <intent-filter android:label="tiktok_oauth">
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="disker" android:host="oauthredirect" android:path="/tiktok" />
+
+        <!-- TikTok SDK callback (native) -->
+        <intent-filter android:label="tiktok_sdk_callback">
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="tiktoksbaw11v8bbfp5avb7d" android:host="authorize" />
+        </intent-filter>
+
+        <!-- TikTok Login Kit HTTPS App Link callback -->
+        <intent-filter android:autoVerify="true">
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data
+            android:scheme="https"
+            android:host="disker-tiktok-links-8q7uw5l95-danibordolis-projects.vercel.app"
+            android:pathPrefix="/oauth/tiktok/callback" />
         </intent-filter>
       </activity>
     </application>
