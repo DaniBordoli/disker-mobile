@@ -127,7 +127,12 @@ export const SocialMediaScreen: React.FC = () => {
 
   const handleSkip = () => {
     console.log('User skipped social media selection');
-   
+    try {
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    } catch (e) {
+      // Fallback in case reset fails in some navigator state
+      navigation.navigate('Home' as any);
+    }
   };
 
  

@@ -108,3 +108,27 @@ export type LoginResponse = ApiResponse<{
   refresh_token: string;
   user: RegisterUserStep1User;
 }>;
+
+// ---- Current User (GET /api/v1/talents/users) ----
+export interface PersonalData {
+  nationality?: string | null;
+  birthday?: string | null; // YYYY-MM-DD
+  gender?: 'male' | 'female' | string | null;
+  location_id?: number | null;
+  postal_code?: string | null;
+}
+
+export interface CurrentUser {
+  id: number;
+  email: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  name?: string | null; // optional convenience
+  role: 'talent' | 'brand' | string;
+  personal_data?: PersonalData | null;
+  signup_steps: SignupSteps;
+}
+
+export type CurrentUserResponse = ApiResponse<{
+  user: CurrentUser;
+}>;

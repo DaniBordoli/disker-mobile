@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../store/auth';
-import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Modal, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Modal, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
@@ -10,7 +10,7 @@ import { BodyM, BodyMLink } from '../components/typography/BodyText';
 import { PrimaryButton } from '../components/buttons/PrimaryButton';
 import { HeadingS } from '../components/typography/Headings';
 import { loginWithTikTokNative } from '../services/tiktokNative';
-import { exchangeTikTokAuthCode } from '../services/api';
+import { storeTikTokTokens, getLinkedAccounts } from '../services/api';
 
 type SocialMediaProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SocialMediaProfile'>;
 
@@ -54,13 +54,24 @@ const SocialMediaProfileScreen: React.FC = () => {
   ];
 
   const [linkedPlatforms, setLinkedPlatforms] = useState<string[]>(['tiktok', 'youtube', 'instagram']);
+  const [isLinking, setIsLinking] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [platformToDelete, setPlatformToDelete] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [linkToast, setLinkToast] = useState<{ visible: boolean; message: string; type: 'success' | 'error' }>({
+    visible: false,
+    message: '',
+    type: 'success',
+  });
 
   const addPlatform = async (platformId: string) => {
+    if (isLinking) {
+      console.log('[TikTokSDK][Profile] Linking already in progress, ignoring tap');
+      return;
+    }
     if (platformId === 'tiktok') {
       try {
+        setIsLinking(true);
         console.log('[TikTokSDK][Profile] User tapped TikTok. Starting native login...');
         // Debug: log current access token
         try {
@@ -72,22 +83,32 @@ const SocialMediaProfileScreen: React.FC = () => {
         const requestedScopes = ['user.info.basic', 'user.info.profile', 'video.list'] as const;
         const res = await loginWithTikTokNative([...requestedScopes]);
         console.log('[TikTokSDK][Profile] Native login result:', res);
-        const code = res?.authCode;
-        if (!code) {
-          console.log('[TikTokSDK][Profile] No authCode received');
+        if (!res) {
+          console.log('[TikTokSDK][Profile] No SDK response received');
           return;
         }
-        const granted = Array.isArray((res as any)?.grantedPermissions)
-          ? ((res as any)?.grantedPermissions as string[])
-          : [...requestedScopes];
-        console.log('[TikTokSDK][Profile] Exchanging code with backend. grantedPermissions:', granted);
-        await exchangeTikTokAuthCode(String(code), res?.codeVerifier, granted);
-        console.log('[TikTokSDK][Profile] Exchange success. Marking TikTok as linked.');
+        console.log('[TikTokSDK][Profile] Storing tokens with backend via store_tokens');
+        await storeTikTokTokens(res as any);
+        console.log('[TikTokSDK][Profile] store_tokens success. Fetching linked accounts...');
+        try {
+          const accounts = await getLinkedAccounts();
+          console.log('[TikTokSDK][Profile] linked accounts:', accounts);
+        } catch (accountsErr) {
+          console.log('[TikTokSDK][Profile] getLinkedAccounts failed', accountsErr);
+        }
         if (!linkedPlatforms.includes('tiktok')) {
           setLinkedPlatforms([...linkedPlatforms, 'tiktok']);
         }
+        // Success toast
+        setLinkToast({ visible: true, message: 'TikTok vinculado', type: 'success' });
+        setTimeout(() => setLinkToast((prev) => ({ ...prev, visible: false })), 3000);
       } catch (e) {
-        console.log('[TikTokSDK][Profile] login error', e);
+        console.log('[TikTokSDK][Profile] login/store_tokens error', e);
+        // Error toast
+        setLinkToast({ visible: true, message: 'No se pudo vincular TikTok. Intenta nuevamente.', type: 'error' });
+        setTimeout(() => setLinkToast((prev) => ({ ...prev, visible: false })), 3000);
+      } finally {
+        setIsLinking(false);
       }
       return;
     }
@@ -290,6 +311,15 @@ const SocialMediaProfileScreen: React.FC = () => {
             <BodyM className="text-white text-center">
               Cuenta desvinculada
             </BodyM>
+          </View>
+        </View>
+      )}
+
+      {isLinking && (
+        <View className="absolute inset-0 bg-black/30 items-center justify-center">
+          <View className="bg-white rounded-2xl px-6 py-6 items-center justify-center">
+            <ActivityIndicator size="large" color="#6D28D9" />
+            <BodyM className="text-primary-950 mt-3">Vinculando TikTok...</BodyM>
           </View>
         </View>
       )}

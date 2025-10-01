@@ -1,6 +1,13 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+// Map buildTypes to specific .env files (must be BEFORE applying dotenv.gradle)
+project.ext.envConfigFiles = [
+    debug  : ".env.staging",    // used by assembleDebug / installDebug
+    release: ".env.production"   // used by assembleRelease / bundleRelease
+]
+// react-native-config: load .env variables
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 /**
  * This is the configuration block to customize your React Native Android app.
