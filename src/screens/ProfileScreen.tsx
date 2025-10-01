@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation';
 import { BottomNavBar } from '../components/navigation/BottomNavBar';
@@ -8,15 +8,39 @@ import { HeadingM, HeadingS, HeadingXS } from '../components/typography/Headings
 import { BodyM, BodyMLink, BodyS } from '../components/typography/BodyText';
 import { useAuthStore } from '../store/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { getCurrentUser } from '../services/api';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const user = useAuthStore((s) => s.currentUser);
+  const lastFetchedUserAt = useAuthStore((s) => s.lastFetchedUserAt);
   const clearSession = useAuthStore((s) => s.clearSession);
 
-  const displayName = React.useMemo(() => {
+  // Revalidate user data on focus if TTL (5 minutes) expired
+  useFocusEffect(
+    React.useCallback(() => {
+      const TTL_MS = 5 * 60 * 1000;
+      const shouldRefetch = !lastFetchedUserAt || (Date.now() - lastFetchedUserAt) > TTL_MS;
+      if (!shouldRefetch) return;
+      let active = true;
+      (async () => {
+        try {
+          await getCurrentUser();
+        } catch (e) {
+          console.log('[Profile] getCurrentUser failed', e);
+        }
+      })();
+      return () => { active = false; };
+    }, [lastFetchedUserAt])
+  );
+
+  const fullName = React.useMemo(() => {
+    const fn = (user?.first_name || '').trim();
+    const ln = (user?.last_name || '').trim();
+    const combined = `${fn} ${ln}`.trim();
+    if (combined.length > 0) return combined;
     if (user?.name && user.name.trim().length > 0) return user.name.trim();
     if (user?.email) return user.email.split('@')[0];
     return 'Usuario';
@@ -45,7 +69,7 @@ const ProfileScreen: React.FC = () => {
               resizeMode="cover"
             />
             <View>
-              <HeadingS className="text-lg text-black font-semibold mb-1">{displayName}</HeadingS>
+              <HeadingS className="text-lg text-black font-semibold mb-1">{fullName}</HeadingS>
               <BodyS className="text-base text-primary-600">{displayEmail}</BodyS>
             </View>
           </View>

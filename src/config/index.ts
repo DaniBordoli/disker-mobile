@@ -1,6 +1,8 @@
 // Central configuration for API endpoints and timeouts
 
-export const BASE_URL = 'https://staging.supra.social';
+import Config from 'react-native-config';
+
+export const BASE_URL = Config.BASE_URL || 'https://staging.supra.social';
 
 export const DEFAULT_TIMEOUT_MS = 15000; // 15s
 

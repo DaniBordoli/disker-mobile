@@ -5,6 +5,8 @@ export type AuthUser = {
   id: number;
   email: string;
   name?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
   role?: string | null;
 };
 
@@ -13,9 +15,11 @@ interface AuthState {
   refreshToken: string | null;
   currentUser: AuthUser | null;
   isHydrated: boolean;
+  lastFetchedUserAt: number | null; // ms since epoch
   // actions
   setTokens: (tokens: { accessToken: string | null; refreshToken: string | null }) => Promise<void>;
   setCurrentUser: (user: AuthUser | null) => void;
+  setLastFetchedUserAt: (ts: number | null) => void;
   clearSession: () => Promise<void>;
   hydrate: () => Promise<void>;
 }
@@ -29,6 +33,7 @@ const creator: StateCreator<AuthState> = (set, get) => ({
   refreshToken: null,
   currentUser: null,
   isHydrated: false,
+  lastFetchedUserAt: null,
 
   setTokens: async (tokens: { accessToken: string | null; refreshToken: string | null }) => {
     const { accessToken, refreshToken } = tokens;
@@ -51,8 +56,10 @@ const creator: StateCreator<AuthState> = (set, get) => ({
 
   setCurrentUser: (user: AuthUser | null) => set({ currentUser: user }),
 
+  setLastFetchedUserAt: (ts: number | null) => set({ lastFetchedUserAt: ts }),
+
   clearSession: async () => {
-    set({ accessToken: null, refreshToken: null, currentUser: null });
+    set({ accessToken: null, refreshToken: null, currentUser: null, lastFetchedUserAt: null });
     try {
       await AsyncStorage.multiRemove([ACCESS_KEY, REFRESH_KEY, USER_KEY]);
     } catch (e) {
