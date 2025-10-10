@@ -69,9 +69,12 @@ export const AuthScreen: React.FC = () => {
       // eslint-disable-next-line no-console
       console.log('[GoogleLogin] local session clear failed', e);
     }
-    try {
-      Alert.alert('Google', 'Se desconectó la cuenta. Vuelve a iniciar sesión para elegir otra.');
-    } catch {}
+    // Delay alert to avoid modal conflict on iOS
+    setTimeout(() => {
+      try {
+        Alert.alert('Google', 'Se desconectó la cuenta. Vuelve a iniciar sesión para elegir otra.');
+      } catch {}
+    }, 500);
     // eslint-disable-next-line no-console
     console.log('[GoogleLogin] disconnect: done');
   }, []);
