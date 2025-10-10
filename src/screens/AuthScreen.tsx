@@ -19,14 +19,15 @@ export const AuthScreen: React.FC = () => {
 
   const handleGoogle = React.useCallback(async () => {
     if (googleLoading) return;
-    setGoogleLoading(true);
     try {
+      // Don't show loading overlay yet - Google Sign-In will show its own modal
       const res = await signInWithGoogle();
       console.log('[GoogleLogin] signIn result', res);
       if (!res?.idToken) {
-        setGoogleLoading(false);
         return;
       }
+      // Now show loading while calling our API
+      setGoogleLoading(true);
       const apiRes = await loginWithGoogleSession(res.idToken);
       console.log('[GoogleLogin] API response', apiRes);
       // Navigate after successful login; store listeners will also react
