@@ -22,6 +22,9 @@ target 'Disker' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  # TikTok SDK
+#  pod 'TikTokOpenSDKCore', '~> 5.0.15'
+# pod 'TikTokOpenAuthSDK', '~> 5.0.15'
 
   target 'DiskerTests' do
     inherit! :complete
