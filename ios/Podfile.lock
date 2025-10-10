@@ -1206,7 +1206,7 @@ PODS:
   - RNGoogleSignin (15.0.0):
     - GoogleSignIn (~> 8.0)
     - React-Core
-  - RNScreens (4.16.0):
+  - RNScreens (4.13.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1495,10 +1495,10 @@ SPEC CHECKSUMS:
   ReactCommon: b1dfa365018c636c73437981ee235c1a35f0e34f
   RNCAsyncStorage: b44e8a4e798c3e1f56bffccd0f591f674fb9198f
   RNGoogleSignin: 0354d0a70bc32e081824f625faf26efcad12574e
-  RNScreens: db25e872ed20fb3af1795aa6e5b7fccd08d9815c
+  RNScreens: 5b8d618280aaab00f2d39d2fbf79918f519af5c5
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 56f906bf6c11c931588191dde1229fd3e4e3d557
 
-PODFILE CHECKSUM: df03c4e642529b0f9c87b88e63dc2a7bcb304fef
+PODFILE CHECKSUM: 80a37affb5184a3d606acc7752a2165d4b83b9cd
 
 COCOAPODS: 1.16.2
