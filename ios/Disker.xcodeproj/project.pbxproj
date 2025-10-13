@@ -128,6 +128,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8479034B2E997AE500E5BC54 /* assets */,
 				13B07FAE1A68108700A75B9A /* Disker */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* DiskerTests */,
@@ -148,6 +149,13 @@
 				00E356EE1AD99517003FC87E /* DiskerTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8479034B2E997AE500E5BC54 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = assets;
 			sourceTree = "<group>";
 		};
 		A088F926078E4CF58FB7E4FF /* Resources */ = {
