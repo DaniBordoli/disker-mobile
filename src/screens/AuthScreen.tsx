@@ -7,7 +7,6 @@ import { PrimaryButton, SocialButton } from '../components/buttons';
 import { BodyLLink, BodyM } from '../components/typography/BodyText';
 import { signInWithGoogle } from '../services/google';
 import { loginWithGoogleSession } from '../services/api';
-import { LoadingOverlay } from '../components';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useAuthStore } from '../store/auth';
 
@@ -15,19 +14,20 @@ type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'A
 
 export const AuthScreen: React.FC = () => {
   const navigation = useNavigation<AuthScreenNavigationProp>();
-  const [googleLoading, setGoogleLoading] = React.useState(false);
+  const [isProcessing, setIsProcessing] = React.useState(false);
 
   const handleGoogle = React.useCallback(async () => {
-    if (googleLoading) return;
+    if (isProcessing) return;
+    setIsProcessing(true);
     try {
-      // Don't show loading overlay yet - Google Sign-In will show its own modal
+      // Google Sign-In will show its own modal - no LoadingOverlay to avoid conflict
       const res = await signInWithGoogle();
       console.log('[GoogleLogin] signIn result', res);
       if (!res?.idToken) {
+        setIsProcessing(false);
         return;
       }
-      // Now show loading while calling our API
-      setGoogleLoading(true);
+      // Call our API
       const apiRes = await loginWithGoogleSession(res.idToken);
       console.log('[GoogleLogin] API response', apiRes);
       // Navigate after successful login; store listeners will also react
@@ -37,9 +37,9 @@ export const AuthScreen: React.FC = () => {
     } catch (e) {
       console.log('[GoogleLogin] error', e);
     } finally {
-      setGoogleLoading(false);
+      setIsProcessing(false);
     }
-  }, [googleLoading, navigation]);
+  }, [isProcessing, navigation]);
 
   
 
@@ -139,11 +139,11 @@ export const AuthScreen: React.FC = () => {
         
 
         <SocialButton 
-          title={googleLoading ? 'Conectando…' : 'Continuar con Google'}
+          title={isProcessing ? 'Conectando…' : 'Continuar con Google'}
           provider="google"
           icon={<Image source={require('../public/SignUpImages/googleLogo.png')} className="w-5 h-5" resizeMode="contain" />}
           onPress={handleGoogle}
-          disabled={googleLoading}
+          disabled={isProcessing}
         />
 
         <TouchableOpacity
@@ -187,7 +187,7 @@ export const AuthScreen: React.FC = () => {
           </BodyM>
         </View>
       </View>
-      <LoadingOverlay visible={googleLoading} message={googleLoading ? 'Conectando con Google...' : ''} />
+      {/* LoadingOverlay removed to avoid modal conflict with Google Sign-In on iOS */}
     </View>
   );
 };
